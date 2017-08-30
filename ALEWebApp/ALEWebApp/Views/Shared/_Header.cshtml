@@ -1,0 +1,48 @@
+﻿
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-success alert-dismissable full-width" id="success-alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>@TempData["Success"]</strong>
+            </div>
+        </div>
+    </div>
+
+}
+@if (TempData["Failure"] != null)
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-danger alert-dismissable full-width">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>@TempData["Failure"]</strong>
+            </div>
+        </div>
+    </div>
+}
+@if (TempData["Warning"] != null)
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-warning alert-dismissable full-width">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>@TempData["Warning"]</strong>
+            </div>
+        </div>
+    </div>
+}
+@if (TempData["Info"] != null)
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info alert-dismissable full-width">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>@TempData["Info"]</strong>
+            </div>
+        </div>
+    </div>
+}

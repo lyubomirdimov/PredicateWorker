@@ -1,0 +1,35 @@
+﻿.footer {
+    background: $colorBlack;
+    color: $colorWhite;
+    min-height: 30px;
+    width: 100%;
+    padding:10px;
+    p{
+        margin:0;
+    }
+}
+
+
+@media (max-width:767px) {
+    .footer{
+        font-size:10px;
+        padding:5px;
+    }
+    
+}
+
+@media(min-width:768px) and (max-width:991px) {
+    .footer {
+        font-size: 12px;
+    }
+}
+
+@media (min-width:992px) and (max-width:1199px) {
+    .footer {
+        font-size: 14px;
+    }
+  
+}
+
+@media (min-width : 1200px) {
+}

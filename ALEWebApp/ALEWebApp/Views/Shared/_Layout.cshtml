@@ -1,0 +1,42 @@
+﻿
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.png" />
+    <title>Auto Choice</title>
+
+    @Styles.Render("~/bundles/maincss")
+    @Styles.Render("~/bundles/font-awesome-css")
+    @Styles.Render("~/bundles/animatecss")
+    @RenderSection("styles", required: false)
+</head>
+<body>
+
+<!-- Navigation -->
+@Html.Partial("_Navigation")
+
+
+<main>
+    <div class="container-fluid">
+        @Html.Partial("_TopNavbar")
+
+        @Html.Partial("_Header")
+        <!-- Main view -->
+        <div class="row">
+            @RenderBody()
+        </div>
+        @Html.Partial("_Footer")
+    </div>
+</main>
+
+
+
+@Scripts.Render("~/bundles/mainjs")
+<!-- Handler for local scripts -->
+@RenderSection("scripts", required: false)
+</body>
+</html>
