@@ -1,0 +1,59 @@
+﻿@using ALEWebApp.Helpers
+@model ALEWebApp.Models.AutomatonViewModel
+<div class="col-12 p-5 content-wrapper">
+    @using (Html.BeginForm("Parse", "Parsing", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group row ">
+                    @Html.LabelFor(m => m.AsciiLogicString, new { @class = Html.LabelClass() })
+                    <div class="@Html.ControlClass()">
+                        @Html.EditorFor(m => m.AsciiLogicString, new { htmlAttributes = new { @class = @Html.ControlClass() } })
+                        @Html.ValidationMessageFor(m => m.AsciiLogicString)
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <input type="submit" value="Parse" class="btn btn-primary" />
+            </div>
+        </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="tree">
+                        <ul>
+                            <li>
+                                <a href="#">&</a>
+                                <ul>
+                                    <li>
+                                        <a href="#">></a>
+                                        <ul>
+                                            <li>
+                                                <a href="#">P</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Q</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">=</a>
+                                        <ul>
+                                            <li>
+                                                <a href="#">P</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Q</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    }
+</div>

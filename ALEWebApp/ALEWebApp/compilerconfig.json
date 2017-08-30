@@ -2,5 +2,9 @@
   {
     "outputFile": "Content/sass/master.css",
     "inputFile": "Content/sass/master.scss"
+  },
+  {
+    "outputFile": "Content/sass/pages/structure.css",
+    "inputFile": "Content/sass/pages/structure.scss"
   }
 ]

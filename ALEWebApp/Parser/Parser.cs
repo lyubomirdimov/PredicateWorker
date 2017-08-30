@@ -9,7 +9,7 @@ namespace Parser
 {
     public static class Parser
     {
-        public static string RemoveWhiteSpaces(string input)
+        public static string RemoveWhiteSpaces(this string input)
         {
             string pattern = "\\s+";
             string replacement = "";

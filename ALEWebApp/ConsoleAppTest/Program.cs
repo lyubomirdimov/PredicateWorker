@@ -10,12 +10,7 @@ namespace ConsoleAppTest
     {
         static void Main(string[] args)
         {
-            string input = "   Hellooo    W   oorl   d";
-            Console.WriteLine(input);
-            
-            input = Parser.Parser.RemoveWhiteSpaces(input);
-            Console.WriteLine(input);
-            Console.ReadLine();
+           
         }
     }
 }

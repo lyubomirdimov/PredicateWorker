@@ -11,6 +11,6 @@ namespace ALEWebApp.Models
     {
         
         [Required(ErrorMessage = "Logical Predicate is Required")]
-        public string AsciiLogicPredicate { get; set; }
+        public string AsciiLogicString { get; set; }
     }
 }

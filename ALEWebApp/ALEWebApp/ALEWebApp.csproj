@@ -117,7 +117,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ParsingController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -168,12 +168,12 @@
     <Content Include="bower_components\bootstrap\robots.txt" />
     <Content Include="Content\sass\master.css" />
     <Content Include="Content\sass\master.min.css" />
-    <Content Include="Content\sass\pages\inventory.css" />
-    <Content Include="Content\sass\pages\inventory.min.css" />
-    <Content Include="Content\sass\pages\inventorydetail.css" />
-    <Content Include="Content\sass\pages\inventorydetail.min.css" />
-    <Content Include="Content\sass\pages\login.css" />
-    <Content Include="Content\sass\pages\login.min.css" />
+    <Content Include="Content\sass\pages\structure.css">
+      <DependentUpon>structure.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\sass\pages\structure.min.css">
+      <DependentUpon>structure.css</DependentUpon>
+    </Content>
     <Content Include="Content\sass\png\car.png" />
     <Content Include="Content\sass\svg\car.svg" />
     <Content Include="Content\sass\svg\carwhite.svg" />
@@ -196,7 +196,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Parsing\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -215,12 +215,11 @@
     <Content Include="Content\sass\layout\_layout.scss" />
     <Content Include="Content\sass\layout\_navigation.scss" />
     <Content Include="Content\sass\master.scss" />
-    <Content Include="Content\sass\pages\inventory.scss" />
-    <Content Include="Content\sass\pages\inventorydetail.scss" />
-    <Content Include="Content\sass\pages\login.scss" />
+    <Content Include="Content\sass\pages\structure.scss" />
     <Content Include="Content\sass\utility\_mixins.scss" />
     <Content Include="Content\sass\utility\_typography.scss" />
     <Content Include="Content\sass\utility\_variables.scss" />
+    <Content Include="bower.json" />
     <Content Include="bower_components\bootstrap\.bower.json" />
     <Content Include="bower_components\bootstrap\bower.json" />
     <Content Include="bower_components\bootstrap\build\.htmllintrc" />
