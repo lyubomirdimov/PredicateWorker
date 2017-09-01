@@ -1,6 +1,6 @@
 ﻿using System;
+using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Parser;
 
 namespace UnitTest
 {
@@ -13,6 +13,14 @@ namespace UnitTest
             string input = " Hello  Worlds  test ttt";
             input = input.RemoveWhiteSpaces();
             Assert.AreEqual(input,"HelloWorldstestttt");
+        }
+
+        [TestMethod]
+        public void GetConnectives()
+        {
+            string input = "&(>(A,B),=(C,D))";
+            string connective = input.GetConnective();
+            Assert.AreEqual(connective,"&");
         }
     }
 }

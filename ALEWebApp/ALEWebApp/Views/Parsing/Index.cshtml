@@ -1,5 +1,5 @@
 ﻿@using ALEWebApp.Helpers
-@model ALEWebApp.Models.AutomatonViewModel
+@model ALEWebApp.Models.LogicStatementViewModel
 <div class="col-12 p-5 content-wrapper">
     @using (Html.BeginForm("Parse", "Parsing", FormMethod.Post))
     {
@@ -20,40 +20,51 @@
                 <input type="submit" value="Parse" class="btn btn-primary" />
             </div>
         </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="tree">
-                        <ul>
+        <div class="row">
+            <div class="col-12">
+                <div class="tree">
+                    <ul>
+                        <!-- When there is just a single Node-->
+                        @if (Model.Tree != null && Model.Tree.Count == 1)
+                        {
                             <li>
-                                <a href="#">&</a>
-                                <ul>
-                                    <li>
-                                        <a href="#">></a>
-                                        <ul>
-                                            <li>
-                                                <a href="#">P</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Q</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">=</a>
-                                        <ul>
-                                            <li>
-                                                <a href="#">P</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Q</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
+                                <a href="#">@Model.Tree.ID</a>
                             </li>
-                        </ul>
-                    </div>
+                        }
+                        else if (Model.Tree != null && Model.Tree.Count > 1)
+                        {
+                            
+                        }
+                        <li>
+                            <a href="#">&</a>
+                            <ul>
+                                <li>
+                                    <a href="#">></a>
+                                    <ul>
+                                        <li>
+                                            <a href="#">P</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Q</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">=</a>
+                                    <ul>
+                                        <li>
+                                            <a href="#">P</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Q</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
+        </div>
     }
 </div>

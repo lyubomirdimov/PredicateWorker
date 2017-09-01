@@ -124,7 +124,7 @@
     <Compile Include="Helpers\BootstrapHtml.cs" />
     <Compile Include="Helpers\HeaderHelper.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
-    <Compile Include="Models\AutomatonViewModel.cs" />
+    <Compile Include="Models\LogicStatementViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -345,9 +345,9 @@
     <Content Include="Views\Shared\_TopNavbar.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Parser\Parser.csproj">
+    <ProjectReference Include="..\Parser\Common.csproj">
       <Project>{60b418af-1456-49ac-91f8-23ff88a94379}</Project>
-      <Name>Parser</Name>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

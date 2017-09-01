@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ALEWebApp", "ALEWebApp\ALEWebApp.csproj", "{68B7D88E-883B-4BAA-9DB1-ECE884290261}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser", "Parser\Parser.csproj", "{60B418AF-1456-49AC-91F8-23FF88A94379}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Parser\Common.csproj", "{60B418AF-1456-49AC-91F8-23FF88A94379}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{C61C4ACD-6E5C-4A15-AACC-0E811BEF8C5B}"
 EndProject

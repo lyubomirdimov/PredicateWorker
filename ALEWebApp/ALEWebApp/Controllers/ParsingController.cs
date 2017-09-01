@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ALEWebApp.Models;
-using Parser;
+using Common;
 
 namespace ALEWebApp.Controllers
 {
@@ -12,15 +12,29 @@ namespace ALEWebApp.Controllers
     {
         public ActionResult Index()
         {
+
+            Node tree = new Node("Root")
+            {
+                new Node("Category 1")
+                {
+                    new Node("Item 1"),
+                    new Node("Item 2"),
+                },
+                new Node("Category 2")
+                {
+                    new Node("Item 3"),
+                    new Node("Item 4"),
+                }
+            };
             return View();
         }
 
         [ValidateAntiForgeryToken]
-        public ActionResult Parse(AutomatonViewModel viewModel)
+        public ActionResult Parse(LogicStatementViewModel viewModel)
         {
             if (ModelState.IsValid == false)
             {
-                return View("Index",viewModel);
+                return View("Index", viewModel);
             }
 
             // Remove White spaces
@@ -31,6 +45,6 @@ namespace ALEWebApp.Controllers
             return null;
         }
 
-      
+
     }
 }

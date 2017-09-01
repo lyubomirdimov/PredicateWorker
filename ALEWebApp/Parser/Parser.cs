@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using Common.Symbols;
 
-namespace Parser
+namespace Common
 {
+    
+
     public static class Parser
     {
+
         public static string RemoveWhiteSpaces(this string input)
         {
             string pattern = "\\s+";
@@ -16,5 +18,10 @@ namespace Parser
             Regex rgx = new Regex(pattern);
             return rgx.Replace(input, replacement);
         }
+
+        public static List<Symbol> ParseLogicalProposition(this string input) => input.ToCharArray().Select(c => new Symbol(c)).ToList();
+
+
+
     }
 }
