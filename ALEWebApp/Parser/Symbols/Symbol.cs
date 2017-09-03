@@ -53,57 +53,68 @@ namespace Common.Symbols
         public bool IsConnective { get; } = false;
         public bool IsParanthesis { get; } = false;
         public bool IsPredicate { get; } = false;
+        public bool IsValid { get; set; } = true;
+        public bool IsNegation => Type == SymbolType.Negation;
 
-        public Symbol(char c)
+        public Symbol(char? c)
         {
-            switch (c)
-            {                
-                case '~':
-                    Type = SymbolType.Negation;
-                    IsConnective = true;
-                    break;
-                case '&':
-                    Type = SymbolType.And;
-                    IsConnective = true;
-                    break;
-                case '|':
-                    Type = SymbolType.Or;
-                    IsConnective = true;
-                    break;
-                case '>':
-                    Type = SymbolType.Implication;
-                    IsConnective = true;
-                    break;
-                case '=':
-                    Type = SymbolType.BiImplication;
-                    IsConnective = true;
-                    break;
-                case ',':
-                    Type = SymbolType.Separator;
-                    break;
-                case '(':
-                    Type = SymbolType.OpeningParanthesis;
-                    IsParanthesis = true;
-                    break;
-                case ')':
-                    Type = SymbolType.ClosingParanthesis;
-                    IsParanthesis = true;
-                    break;
-                case '0':
-                    Type = SymbolType.False;
-                    IsPredicate = true;
-                    break;
-                case '1':
-                    Type = SymbolType.True;
-                    IsPredicate = true;
-                    break;
-                default:
-                    Type = SymbolType.Predicate;
-                    IsPredicate = true;
-                    break;
+            if (c == null)
+            {
+                IsValid = false;
             }
-            Char = c;
+            else
+            {
+                switch (c)
+                {
+                    case '~':
+                        Type = SymbolType.Negation;
+                        IsConnective = true;
+                        break;
+                    case '&':
+                        Type = SymbolType.And;
+                        IsConnective = true;
+                        break;
+                    case '|':
+                        Type = SymbolType.Or;
+                        IsConnective = true;
+                        break;
+                    case '>':
+                        Type = SymbolType.Implication;
+                        IsConnective = true;
+                        break;
+                    case '=':
+                        Type = SymbolType.BiImplication;
+                        IsConnective = true;
+                        break;
+                    case ',':
+                        Type = SymbolType.Separator;
+                        break;
+                    case '(':
+                        Type = SymbolType.OpeningParanthesis;
+                        IsParanthesis = true;
+                        break;
+                    case ')':
+                        Type = SymbolType.ClosingParanthesis;
+                        IsParanthesis = true;
+                        break;
+                    case '0':
+                        Type = SymbolType.False;
+                        IsPredicate = true;
+                        break;
+                    case '1':
+                        Type = SymbolType.True;
+                        IsPredicate = true;
+                        break;
+                    default:
+                        Type = SymbolType.Predicate;
+                        IsPredicate = true;
+                        break;
+                }
+                Char = (char) c;
+            }
         }
+
+      
         public override string ToString() => Char.ToString();
     }
 }

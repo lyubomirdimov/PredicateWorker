@@ -1,22 +1,26 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Common.Symbols;
 
 namespace Common
 {
-    public class Node : IEnumerable<Node>
+    public class Node 
     {
-        private readonly Dictionary<string, Node> _children =
-            new Dictionary<string, Node>();
+        private readonly Dictionary<Guid, Node> _children =
+            new Dictionary<Guid, Node>();
 
-        public readonly string ID;
+        public readonly Guid ID;
+        public Symbol Symbol { get; }  
         public Node Parent { get; private set; }
 
-        public Node(string id)
+        public Node(Guid id,Symbol symbol)
         {
             this.ID = id;
+            Symbol = symbol;
         }
 
-        public Node GetChild(string id)
+        public Node GetChild(Guid id)
         {
             return this._children[id];
         }
@@ -32,15 +36,8 @@ namespace Common
             this._children.Add(item.ID, item);
         }
 
-        public IEnumerator<Node> GetEnumerator()
-        {
-            return this._children.Values.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
+        public Dictionary<Guid, Node> Children => _children;
+      
 
         public int Count => this._children.Count;
     }
