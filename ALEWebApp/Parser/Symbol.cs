@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Common.Symbols
+﻿namespace Common
 {
+
+    /// <summary>
+    /// Symbol type represents the equivalent logical proposition statement for certain symbol
+    /// Symbol Type accepts Connectives, Predicates, Separator, and Paranthesis
+    /// </summary>
     public enum SymbolType
     {
         // Connective - &
@@ -55,6 +54,7 @@ namespace Common.Symbols
         public bool IsPredicate { get; } = false;
         public bool IsValid { get; set; } = true;
         public bool IsNegation => Type == SymbolType.Negation;
+        public bool IsOpeningParanthesis => Type == SymbolType.OpeningParanthesis;
         public bool IsClosingParanthesis => Type == SymbolType.ClosingParanthesis;
 
         public Symbol(char? c)

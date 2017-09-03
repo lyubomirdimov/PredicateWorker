@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using ALEWebApp.Models;
 using Common;
-using Common.Symbols;
 
 namespace ALEWebApp.Controllers
 {
@@ -24,15 +23,26 @@ namespace ALEWebApp.Controllers
             {
                 return View("Index", viewModel);
             }
-        
-           
-
-            // Remove White spaces
-            
-            // Check if string is valid
 
             viewModel.AsciiLogicString = "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))";
+            viewModel.AsciiLogicString = viewModel.AsciiLogicString.RemoveWhiteSpaces();
+
+            
+
+            // Validate correctness of Logic statement
+            List<string> validationResult = LogicStatementValidator.Validate(viewModel.AsciiLogicString);
+
             List<Symbol> parsedString = viewModel.AsciiLogicString.ParseLogicalProposition();
+            if (validationResult.Count > 0)
+            {
+                foreach (var error in validationResult)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return View("Index", viewModel);
+            }
+
+            
 
             viewModel.Tree = TreeConstructor.ConstructTree(parsedString);
 

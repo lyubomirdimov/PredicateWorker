@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Common;
-using Common.Symbols;
 
 namespace ConsoleAppTest
 {
@@ -14,14 +13,20 @@ namespace ConsoleAppTest
         static void Main(string[] args)
         {
             string input = "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))";
-            List<Symbol> parsedString = input.ParseLogicalProposition();
 
-            Node parentNode = TreeConstructor.ConstructTree(parsedString);
+            List<string> validResults = new List<string>();
 
-            if (parentNode != null)
-            {
-                BFS(parentNode);
-            }
+            LogicStatementValidator.CheckInitialValidSymbol(input,validResults);
+
+
+            //List<Symbol> parsedString = input.ParseLogicalProposition();
+
+            //Node parentNode = TreeConstructor.ConstructTree(parsedString);
+
+            //if (parentNode != null)
+            //{
+            //    BFS(parentNode);
+            //}
 
 
             Console.ReadLine();
