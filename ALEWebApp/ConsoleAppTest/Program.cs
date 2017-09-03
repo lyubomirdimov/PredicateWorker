@@ -12,7 +12,7 @@ namespace ConsoleAppTest
     {
         static void Main(string[] args)
         {
-            var properOutput = "&(>(A,B),~(0))";
+            var properOutput = "&(&(=(A,B),>(&(A,B),~(C))),~(0))";
             //var nodes = properOutput.ParseLogicalProposition();
             var split = SplitLogicalProposition(properOutput);
 
@@ -48,7 +48,7 @@ namespace ConsoleAppTest
 
             foreach (var paranthesisTuple in paranthesisTuples)
             {
-                groups.Add(properOutput.Substring(input.IndexOf(paranthesisTuple.Item1),input.IndexOf(paranthesisTuple.Item2) - input.IndexOf(paranthesisTuple.Item1) + 1));
+                groups.Add(properOutput.Substring(input.IndexOf(paranthesisTuple.Item1) - 1,input.IndexOf(paranthesisTuple.Item2) - input.IndexOf(paranthesisTuple.Item1) + 2));
             }
             return groups;
 
