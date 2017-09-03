@@ -33,7 +33,7 @@
                             @if (Model != null && Model.Tree != null)
                             {
                                 <!-- Root -->
-                                <a href="#">@Model.Tree.Symbol.ToString()</a>
+                                <a href="#">@Model.Tree.Token.ToString()</a>
                                 <ul>
 
                                     @ShowTree(Model.Tree.Children)

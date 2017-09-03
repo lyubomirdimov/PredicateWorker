@@ -61,9 +61,9 @@ namespace UnitTest
         [TestMethod]
         public void RegexCheck()
         {
-            var input = "1";
-            Regex regex = new Regex("(^[A-Z0-1]{1}$)");
-            Assert.IsTrue(regex.IsMatch(input));
+            string input = "((=(AB)>(&(AB)~(C)))>(A~(&(AB))))";
+            Regex checkExpression = new Regex(@"([&|>=]\(([A-Z0-1]{1}|\(.*\)),([A-Z0-1]{1}|\(.*\))\))|([~]\(([A-Z0-1]{1}|\(.*\))\))");
+            Assert.IsTrue(checkExpression.IsMatch(input));
 
 
 

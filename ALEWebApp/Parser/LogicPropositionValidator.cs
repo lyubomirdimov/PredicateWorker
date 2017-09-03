@@ -41,6 +41,7 @@ namespace Common
             }
 
             bool isExpressionValid = true;
+            List<string> blocks = new List<string>();
             Stack<Token> stackOfParenthesis = new Stack<Token>();
             foreach (Token token in parsedTokens)
             {
@@ -56,7 +57,7 @@ namespace Common
                     int closingIndex = parsedTokens.IndexOf(token) - openingIndex;
                     List<Token> symbolsBlock = parsedTokens.Skip(openingIndex - 1).Take(closingIndex + 2).ToList();
                     string stringBlock = input.Substring(openingIndex - 1, closingIndex + 2);
-
+                    blocks.Add(stringBlock);
 
                     if (symbolsBlock[0].IsConnective == false)
                     {
@@ -69,8 +70,8 @@ namespace Common
                         if (symbolsBlock[0].IsNegation)
                         // There should be only one Proposition after the negation
                         {
-                            string withoutParanthesis = stringBlock.Substring(2, stringBlock.Length - 1);
-                            if (singlePredicatePattern.IsMatch(input))
+                            string withoutParanthesis = stringBlock.Substring(2, 1);
+                            if (singlePredicatePattern.IsMatch(withoutParanthesis))
                             {
                                 continue;
                             }
