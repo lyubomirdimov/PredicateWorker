@@ -26,13 +26,12 @@ namespace ALEWebApp.Controllers
 
             viewModel.AsciiLogicString = "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))";
             viewModel.AsciiLogicString = viewModel.AsciiLogicString.RemoveWhiteSpaces();
-
             
 
             // Validate correctness of Logic statement
-            List<string> validationResult = LogicStatementValidator.Validate(viewModel.AsciiLogicString);
+            List<string> validationResult = LogicPropositionValidator.Validate(viewModel.AsciiLogicString);
 
-            List<Symbol> parsedString = viewModel.AsciiLogicString.ParseLogicalProposition();
+            List<Token> parsedString = viewModel.AsciiLogicString.ParseLogicalProposition();
             if (validationResult.Count > 0)
             {
                 foreach (var error in validationResult)

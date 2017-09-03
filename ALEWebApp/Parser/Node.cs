@@ -11,13 +11,13 @@ namespace Common
             new List<Node>();
 
         public readonly Guid Id;
-        public Symbol Symbol { get; }  
+        public Token Token { get; }  
         public Node Parent { get; private set; }
 
-        public Node(Guid id,Symbol symbol)
+        public Node(Guid id,Token token)
         {
             this.Id = id;
-            Symbol = symbol;
+            Token = token;
         }
 
         public Node GetChild(Guid id)

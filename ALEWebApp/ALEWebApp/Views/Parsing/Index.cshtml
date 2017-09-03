@@ -43,16 +43,16 @@
 
                                 foreach (var node in children)
                                 {
-                                    if (node.Symbol.IsPredicate)
+                                    if (node.Token.IsPredicate)
                                     {
                                             <li>
-                                                <a href="#">@node.Symbol.ToString()</a>
+                                                <a href="#">@node.Token.ToString()</a>
                                             </li>
                                     }
-                                    else if (node.Symbol.IsConnective)
+                                    else if (node.Token.IsConnective)
                                     {
                                             <li>
-                                                <a href="#">@node.Symbol.ToString()</a>
+                                                <a href="#">@node.Token.ToString()</a>
                                                 <ul>
                                                         @if (node.Children.Any())
                                             {

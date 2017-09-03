@@ -16,10 +16,10 @@ namespace ConsoleAppTest
 
             List<string> validResults = new List<string>();
 
-            LogicStatementValidator.CheckInitialValidSymbol(input,validResults);
+            LogicPropositionValidator.Validate(input);
 
 
-            //List<Symbol> parsedString = input.ParseLogicalProposition();
+            //List<Token> parsedString = input.ParseLogicalProposition();
 
             //Node parentNode = TreeConstructor.ConstructTree(parsedString);
 
@@ -41,7 +41,7 @@ namespace ConsoleAppTest
             while (q.Count > 0)
             {
                 Node n = (Node) q.Dequeue();
-                Console.WriteLine(n.Symbol.ToString());
+                Console.WriteLine(n.Token.ToString());
                 foreach (var nChild in n.Children)
                 {
                     q.Enqueue(nChild);

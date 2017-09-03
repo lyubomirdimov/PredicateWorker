@@ -2,10 +2,10 @@
 {
 
     /// <summary>
-    /// Symbol type represents the equivalent logical proposition statement for certain symbol
-    /// Symbol Type accepts Connectives, Predicates, Separator, and Paranthesis
+    /// Token type represents the equivalent logical proposition statement for certain token
+    /// Token Type accepts Connectives, Predicates, Separator, and Paranthesis
     /// </summary>
-    public enum SymbolType
+    public enum TokenType
     {
         // Connective - &
         And,
@@ -45,19 +45,20 @@
     /// <summary>
     /// Used for parsing a Ascii string   
     /// </summary>
-    public class Symbol
+    public class Token
     {
-        public SymbolType Type { get; set; }
+        public TokenType Type { get; set; }
         public char Char { get; }
         public bool IsConnective { get; } = false;
         public bool IsParanthesis { get; } = false;
         public bool IsPredicate { get; } = false;
         public bool IsValid { get; set; } = true;
-        public bool IsNegation => Type == SymbolType.Negation;
-        public bool IsOpeningParanthesis => Type == SymbolType.OpeningParanthesis;
-        public bool IsClosingParanthesis => Type == SymbolType.ClosingParanthesis;
+        public bool IsNegation => Type == TokenType.Negation;
+        public bool IsOpeningParanthesis => Type == TokenType.OpeningParanthesis;
+        public bool IsClosingParanthesis => Type == TokenType.ClosingParanthesis;
+        public bool IsSeparator => Type == TokenType.Separator;
 
-        public Symbol(char? c)
+        public Token(char? c)
         {
             if (c == null)
             {
@@ -66,56 +67,56 @@
             else
             {
                 switch (c)
+                // Define the type of the Character
                 {
                     case '~':
-                        Type = SymbolType.Negation;
+                        Type = TokenType.Negation;
                         IsConnective = true;
                         break;
                     case '&':
-                        Type = SymbolType.And;
+                        Type = TokenType.And;
                         IsConnective = true;
                         break;
                     case '|':
-                        Type = SymbolType.Or;
+                        Type = TokenType.Or;
                         IsConnective = true;
                         break;
                     case '>':
-                        Type = SymbolType.Implication;
+                        Type = TokenType.Implication;
                         IsConnective = true;
                         break;
                     case '=':
-                        Type = SymbolType.BiImplication;
+                        Type = TokenType.BiImplication;
                         IsConnective = true;
                         break;
                     case ',':
-                        Type = SymbolType.Separator;
+                        Type = TokenType.Separator;
                         break;
                     case '(':
-                        Type = SymbolType.OpeningParanthesis;
+                        Type = TokenType.OpeningParanthesis;
                         IsParanthesis = true;
                         break;
                     case ')':
-                        Type = SymbolType.ClosingParanthesis;
+                        Type = TokenType.ClosingParanthesis;
                         IsParanthesis = true;
                         break;
                     case '0':
-                        Type = SymbolType.False;
+                        Type = TokenType.False;
                         IsPredicate = true;
                         break;
                     case '1':
-                        Type = SymbolType.True;
+                        Type = TokenType.True;
                         IsPredicate = true;
                         break;
                     default:
-                        Type = SymbolType.Predicate;
+                        Type = TokenType.Predicate;
                         IsPredicate = true;
                         break;
                 }
-                Char = (char) c;
+                Char = (char)c;
             }
         }
 
-      
         public override string ToString() => Char.ToString();
     }
 }
