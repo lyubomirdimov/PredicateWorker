@@ -1,42 +1,43 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Common.Symbols;
 
 namespace Common
 {
     public class Node 
     {
-        private readonly Dictionary<Guid, Node> _children =
-            new Dictionary<Guid, Node>();
+        private readonly List<Node> _children =
+            new List<Node>();
 
-        public readonly Guid ID;
+        public readonly Guid Id;
         public Symbol Symbol { get; }  
         public Node Parent { get; private set; }
 
         public Node(Guid id,Symbol symbol)
         {
-            this.ID = id;
+            this.Id = id;
             Symbol = symbol;
         }
 
         public Node GetChild(Guid id)
         {
-            return this._children[id];
+            return this._children.FirstOrDefault(x=>x.Id == id);
         }
 
         public void Add(Node item)
         {
             if (item.Parent != null)
             {
-                item.Parent._children.Remove(item.ID);
+                item.Parent._children.Remove(item);
             }
 
             item.Parent = this;
-            this._children.Add(item.ID, item);
+            this._children.Add(item);
         }
 
-        public Dictionary<Guid, Node> Children => _children;
+        public List<Node> Children => _children;
       
 
         public int Count => this._children.Count;

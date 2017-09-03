@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using ALEWebApp.Models;
 using Common;
+using Common.Symbols;
 
 namespace ALEWebApp.Controllers
 {
@@ -13,20 +14,7 @@ namespace ALEWebApp.Controllers
         public ActionResult Index()
         {
 
-            Node tree = new Node("Root")
-            {
-                new Node("Category 1")
-                {
-                    new Node("Item 1"),
-                    new Node("Item 2"),
-                },
-                new Node("Category 2")
-                {
-                    new Node("Item 3"),
-                    new Node("Item 4"),
-                }
-            };
-            return View();
+            return View(new LogicStatementViewModel());
         }
 
         [ValidateAntiForgeryToken]
@@ -36,13 +24,19 @@ namespace ALEWebApp.Controllers
             {
                 return View("Index", viewModel);
             }
+        
+           
 
             // Remove White spaces
-            viewModel.AsciiLogicString.RemoveWhiteSpaces();
+            
             // Check if string is valid
 
+            viewModel.AsciiLogicString = "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))";
+            List<Symbol> parsedString = viewModel.AsciiLogicString.ParseLogicalProposition();
 
-            return null;
+            viewModel.Tree = TreeConstructor.ConstructTree(parsedString);
+
+            return View("Index", viewModel);
         }
 
 

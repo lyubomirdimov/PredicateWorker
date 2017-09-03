@@ -43,7 +43,8 @@
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="Symbols\Symbol.cs" />
+    <Compile Include="Symbol.cs" />
+    <Compile Include="TreeConstructor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -55,6 +55,7 @@ namespace Common.Symbols
         public bool IsPredicate { get; } = false;
         public bool IsValid { get; set; } = true;
         public bool IsNegation => Type == SymbolType.Negation;
+        public bool IsClosingParanthesis => Type == SymbolType.ClosingParanthesis;
 
         public Symbol(char? c)
         {

@@ -1,4 +1,6 @@
-﻿@using ALEWebApp.Helpers
+﻿@using System.Collections
+@using ALEWebApp.Helpers
+@using Common
 @model ALEWebApp.Models.LogicStatementViewModel
 <div class="col-12 p-5 content-wrapper">
     @using (Html.BeginForm("Parse", "Parsing", FormMethod.Post))
@@ -23,46 +25,118 @@
         <div class="row">
             <div class="col-12">
                 <div class="tree">
+
+
+
                     <ul>
-                        <!-- When there is just a single Node-->
-                        @if (Model.Tree != null && Model.Tree.Count == 1)
-                        {
-                            <li>
-                                <a href="#">@Model.Tree.ID</a>
-                            </li>
-                        }
-                        else if (Model.Tree != null && Model.Tree.Count > 1)
-                        {
-                            
-                        }
                         <li>
-                            <a href="#">&</a>
-                            <ul>
-                                <li>
-                                    <a href="#">></a>
-                                    <ul>
-                                        <li>
-                                            <a href="#">P</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Q</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">=</a>
-                                    <ul>
-                                        <li>
-                                            <a href="#">P</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Q</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
+                            @if (Model != null && Model.Tree != null)
+                            {
+                                <!-- Root -->
+                                <a href="#">@Model.Tree.Symbol.ToString()</a>
+                                <ul>
+
+                                    @ShowTree(Model.Tree.Children)
+
+                                    @helper ShowTree(IEnumerable<Node> children)
+                                    {
+
+                                foreach (var node in children)
+                                {
+                                    if (node.Symbol.IsPredicate)
+                                    {
+                                            <li>
+                                                <a href="#">@node.Symbol.ToString()</a>
+                                            </li>
+                                    }
+                                    else if (node.Symbol.IsConnective)
+                                    {
+                                            <li>
+                                                <a href="#">@node.Symbol.ToString()</a>
+                                                <ul>
+                                                        @if (node.Children.Any())
+                                            {
+                                                            @ShowTree(node.Children)
+
+                                                        }
+                                                </ul>
+                                            </li>
+
+                                    }
+                                }
+                                }
+                                </ul>
+                            }
+
                         </li>
                     </ul>
+                    @*<ul>
+                            <li>
+                                <a href="#">&</a>
+                                <ul>
+                                    <li>
+                                        <a href="#">&</a>
+                                        <ul>
+                                            <li>
+                                                <a href="#">=</a>
+                                                <ul>
+                                                    <li> <a href="#">A</a> </li>
+                                                    <li> <a href="#">B</a> </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#">></a>
+                                                <ul>
+                                                    <li>
+                                                        <a href="#">&</a>
+                                                        <ul>
+                                                            <li>
+                                                                <a href="#">A</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">B</a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">~</a>
+                                                        <ul>
+                                                            <li>
+                                                                <a href="#">C</a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">></a>
+                                        <ul>
+                                            <li>
+                                                <a href="#">A</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">~</a>
+                                                <ul>
+                                                    <li>
+                                                        <a href="#">&</a>
+                                                        <ul>
+                                                            <li>
+                                                                <a href="#">A</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">B</a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>*@
                 </div>
             </div>
         </div>
