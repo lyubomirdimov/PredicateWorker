@@ -32,14 +32,14 @@ namespace ALEWebApp.Controllers
             List<string> validationResult = LogicPropositionValidator.Validate(viewModel.AsciiLogicString);
 
             List<Token> parsedString = viewModel.AsciiLogicString.ParseLogicalProposition();
-            if (validationResult.Count > 0)
-            {
-                foreach (var error in validationResult)
-                {
-                    ModelState.AddModelError("", error);
-                }
-                return View("Index", viewModel);
-            }
+            //if (validationResult.Count > 0)
+            //{
+            //    foreach (var error in validationResult)
+            //    {
+            //        ModelState.AddModelError("", error);
+            //    }
+            //    return View("Index", viewModel);
+            //}
 
             
 
