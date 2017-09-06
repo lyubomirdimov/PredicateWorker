@@ -61,12 +61,76 @@ namespace UnitTest
         [TestMethod]
         public void RegexCheck()
         {
-            string input = "((=(AB)>(&(AB)~(C)))>(A~(&(AB))))";
-            Regex checkExpression = new Regex(@"([&|>=]\(([A-Z0-1]{1}|\(.*\)),([A-Z0-1]{1}|\(.*\))\))|([~]\(([A-Z0-1]{1}|\(.*\))\))");
-            Assert.IsTrue(checkExpression.IsMatch(input));
+            string input = "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))";
+            Regex r = new Regex(
+                @"^([01A-Z]|
+                (?<dyadic>[|&>=]\()|
+                (?<comma-dyadic>\,)|
+                (?<dBracket-comma>\))
+                |(?<unary>~\()|
+                (?<uBracket-unary>\)))+
+                (?(dyadic)(?!))(?(comma)(?!))(?(unary)(?!))$"
+                , RegexOptions.IgnorePatternWhitespace);
+            Assert.IsTrue(r.IsMatch(input));
 
 
 
+        }
+
+        public void CheckRegex()
+        {
+            Regex r = new Regex(
+                @"^([01A-Z]|
+                (?<dyadic>[|&>=]\()|
+                (?<comma-dyadic>\,)|
+                (?<dBracket-comma>\))
+                |(?<unary>~\()|
+                (?<uBracket-unary>\)))+
+                (?(dyadic)(?!))(?(comma)(?!))(?(unary)(?!))$"
+                , RegexOptions.IgnorePatternWhitespace);
+
+            string target = @"&(A,|(B,C)";
+            string[] passList = {
+                @"&(A,B)",
+                @"~(0)",
+                @"&(A,~(B))",
+                @">(~(=(D,A)),~(B))",
+                @"T"};
+            for (int i = 0; i < passList.Length; i++)
+            {
+                if (r.Match(passList[i]).Success)
+                {
+                    Console.WriteLine("String: " + passList[i] + " Matches.");
+                }
+                else
+                {
+                    Console.WriteLine("Match expected but failed");
+                }
+            }
+
+            string[] failList = {
+                @"&(A,B",
+                @"~(A,B)",
+                @"&(A,|(B))",
+                @">(~(=(D,A),~(B))",
+                @">"};
+
+            for (int i = 0; i < failList.Length; i++)
+            {
+                if (r.Match(failList[i]).Success)
+                {
+                    Console.WriteLine("String: " + failList[i] + " matches but should not.");
+                }
+                else
+                {
+                    Console.WriteLine("No match as expected");
+                }
+            }
+        }
+
+        public void regexCheck()
+        {
+   
         }
 
     }
