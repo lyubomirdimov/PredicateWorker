@@ -100,7 +100,10 @@ namespace ConsoleAppTest
                 @"&(A,~(B))",
                 @">(~(=(D,A)),~(B))",
                 @"T",
-                @"&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))"
+                @"&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))",
+                @"1",
+                @"0",
+                @"~(A)"
             };
             for (int i = 0; i < passList.Length; i++)
             {
@@ -119,7 +122,11 @@ namespace ConsoleAppTest
                 @"~(A,B)",
                 @"&(A,|(B))",
                 @">(~(=(D,A),~(B))",
-                @">"};
+                @">",
+                @"~",
+                @"=",
+
+            };
 
             for (int i = 0; i < failList.Length; i++)
             {

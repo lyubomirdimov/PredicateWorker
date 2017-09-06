@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -55,83 +56,87 @@ namespace UnitTest
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+       
         [TestMethod]
-        public void RegexCheck()
-        {
-            string input = "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))";
-            Regex r = new Regex(
-                @"^([01A-Z]|
-                (?<dyadic>[|&>=]\()|
-                (?<comma-dyadic>\,)|
-                (?<dBracket-comma>\))
-                |(?<unary>~\()|
-                (?<uBracket-unary>\)))+
-                (?(dyadic)(?!))(?(comma)(?!))(?(unary)(?!))$"
-                , RegexOptions.IgnorePatternWhitespace);
-            Assert.IsTrue(r.IsMatch(input));
-
-
-
-        }
-
         public void CheckRegex()
         {
             Regex r = new Regex(
-                @"^([01A-Z]|
-                (?<dyadic>[|&>=]\()|
-                (?<comma-dyadic>\,)|
-                (?<dBracket-comma>\))
-                |(?<unary>~\()|
-                (?<uBracket-unary>\)))+
-                (?(dyadic)(?!))(?(comma)(?!))(?(unary)(?!))$"
+                @"^                             # Start of line
+                  (                             # Either
+                      [01A-Z](?![01A-Z])  |      # A symbol or bool followed by anything else
+                      (?<dyadic>[|&>=]\((?!,))| # Start of dyadic
+                      (?<comma-dyadic>,(?!\)))| # Looks for comma followed by dyadic. Pops off the dyadic stack.
+                      (?<dBracket-comma>\))|    # Looks for ending bracket following comma. pops off comma stack. 
+                      (?<monadic>~\((?!\)))|    # Start of monadic function.
+                      (?<uBracket-monadic>\)))  # Looks for ending bracket for unary. Pops off the monadic stack. 
+                  +                             # Any number of times.
+                  (?(dyadic)(?!))               # Assert dyadic stack is empty. All have a comma.
+                  (?(comma)(?!))                # Assert comma stack is empty. All dyadic commas followed by brackets.
+                  (?(monadic)(?!))              # Assert monadic stack is empty. All monadic expressions have closing brackets.
+                  $"
                 , RegexOptions.IgnorePatternWhitespace);
+            /* @"^
+                 (
+                  [01A-Z](?![01A-Z])|
+                //(?<dyadic>[|&>=]\((?!,))|
+                //(?<comma-dyadic>,(?!\)))|
+                //(?<dBracket-comma>\))|
+                //(?<monadic>~\((?!\)))|
+                //(?<uBracket-monadic>\)))+
+                //(?(dyadic)(?!))(?(comma)(?!))(?(monadic)(?!))$"
 
-            string target = @"&(A,|(B,C)";
-            string[] passList = {
+                */
+
+            List<string> validPropostions = new List<string>
+            {
+                @">(A,B)",
+                @"~(A)",
+                @">(=(A,B),~(C))",
                 @"&(A,B)",
                 @"~(0)",
                 @"&(A,~(B))",
                 @">(~(=(D,A)),~(B))",
-                @"T"};
-            for (int i = 0; i < passList.Length; i++)
+                @"T",
+                @"&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))",
+                @"1",
+                @"0",
+                @"~(A)",
+
+            };
+            foreach (var validPropostion in validPropostions)
             {
-                if (r.Match(passList[i]).Success)
-                {
-                    Console.WriteLine("String: " + passList[i] + " Matches.");
-                }
-                else
-                {
-                    Console.WriteLine("Match expected but failed");
-                }
+                Assert.IsTrue(r.Match(validPropostion).Success);
             }
 
-            string[] failList = {
+
+            List<string> invalidPropositions = new List<string>
+            {
                 @"&(A,B",
                 @"~(A,B)",
                 @"&(A,|(B))",
-                @">(~(=(D,A),~(B))",
-                @">"};
-
-            for (int i = 0; i < failList.Length; i++)
+                @">",
+                @"~",
+                @"=",
+                @"3",
+                @"4",
+                @"11",
+                @"~(,B)",
+                @">(,B)",
+                @"=(A,)",
+                @">(,)",
+                @"=(,)",
+                @"~()",
+                @">(,",
+                @",,",
+                @" "
+            };
+            foreach (var invalidProposition in invalidPropositions)
             {
-                if (r.Match(failList[i]).Success)
-                {
-                    Console.WriteLine("String: " + failList[i] + " matches but should not.");
-                }
-                else
-                {
-                    Console.WriteLine("No match as expected");
-                }
+                Assert.IsFalse(r.Match(invalidProposition).Success);
             }
         }
 
-        public void regexCheck()
-        {
-   
-        }
+       
 
     }
 }
