@@ -12,9 +12,10 @@ namespace ALEWebApp.Controllers
     {
         public ActionResult Index()
         {
-
             return View(new LogicStatementViewModel());
         }
+
+       
 
         [ValidateAntiForgeryToken]
         public ActionResult Parse(LogicStatementViewModel viewModel)
@@ -24,30 +25,22 @@ namespace ALEWebApp.Controllers
                 return View("Index", viewModel);
             }
 
-            viewModel.AsciiLogicString = "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))";
-            viewModel.AsciiLogicString = viewModel.AsciiLogicString.RemoveWhiteSpaces();
-            
-
-            // Validate correctness of Logic statement
-            List<string> validationResult = LogicPropositionValidator.Validate(viewModel.AsciiLogicString);
-
-            List<Token> parsedString = viewModel.AsciiLogicString.ParseLogicalProposition();
-            //if (validationResult.Count > 0)
-            //{
-            //    foreach (var error in validationResult)
-            //    {
-            //        ModelState.AddModelError("", error);
-            //    }
-            //    return View("Index", viewModel);
-            //}
-
-            
-
+            List<Token> parsedString = viewModel.InputProposition.ParseLogicalProposition();
             viewModel.Tree = TreeConstructor.ConstructTree(parsedString);
 
             return View("Index", viewModel);
         }
 
-
+        /// <summary>
+        /// Validates weather or not input is a valid Logical proposition
+        /// </summary>
+        /// <param name="inputProposition">Logical proposition as ASCII string</param>
+        [HttpPost]
+        [AllowAnonymous]
+        public JsonResult ValidateProposition(string inputProposition)
+        {
+            return Json(LogicPropositionValidator.Validate(inputProposition));
+        }
     }
+
 }

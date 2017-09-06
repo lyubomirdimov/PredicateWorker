@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Mvc;
 using Common;
 
 namespace ALEWebApp.Models
@@ -11,8 +12,10 @@ namespace ALEWebApp.Models
     public class LogicStatementViewModel
     {
         
-        [Required(ErrorMessage = "Logical Predicate is Required")]
-        public string AsciiLogicString { get; set; }
+        [Display(Name = "Logical Propositon")]
+        [Required(ErrorMessage = "Logical Proposition is Required")]
+        [Remote("ValidateProposition","Parsing",HttpMethod = "POST",ErrorMessage = "Invalid Logical Proposition")]
+        public string InputProposition { get; set; }
 
         public Node Tree { get; set; }
 

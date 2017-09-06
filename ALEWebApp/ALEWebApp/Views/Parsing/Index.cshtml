@@ -9,49 +9,47 @@
 
         <div class="row">
             <div class="col-6">
-                <div class="h1">
-                    Example of valid Propositions
+                <div class="h3">
+                    Examples of valid Propositions
                 </div>
+                <hr />
                 <div class="list-group">
                     @foreach (var prop in Model.ExampleValidPropositions)
                     {
 
-                        <a href="#" class="list-group-item list-group-item-action propositionExample">
+                        <button type="button" class="list-group-item list-group-item-action propositionExample">
                             @prop
-                        </a>
+                        </button>
                     }
                 </div>
             </div>
         </div>
-        <hr/>   
+        <hr />
         <div class="row">
 
-            <div class="col-3">
+            <div class="col-6">
 
                 <div class="form-group">
-                    @Html.LabelFor(m => m.AsciiLogicString, new { @class = Html.LabelClass() })
-                    <div class="@Html.ControlClass()">
-                        @Html.EditorFor(m => m.AsciiLogicString, new { htmlAttributes = new { @class = @Html.ControlClass() } })
-                        @Html.ValidationMessageFor(m => m.AsciiLogicString)
-                    </div>
+                    @Html.LabelFor(m => m.InputProposition, new { })
+                    @Html.EditorFor(m => m.InputProposition, new { htmlAttributes = new { @class = @Html.ControlClass(), @id = "tbxInputProposition" } })
+                    @Html.ValidationMessageFor(m => m.InputProposition)
                 </div>
 
 
             </div>
-            <div class="col-9">
+            <div class="col-6"></div>
+            <div class="col-12">
                 <button type="submit" class="btn btn-primary">Construct Tree</button>
             </div>
 
         </div>
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 align-content-center">
                 <div class="tree">
-
-
 
                     <ul>
                         <li>
-                            @if (Model != null && Model.Tree != null)
+                            @if (Model?.Tree != null)
                             {
                                 <!-- Root -->
                                 <a href="#">@Model.Tree.Token.ToString()</a>
@@ -91,75 +89,53 @@ foreach (var node in children)
 
                         </li>
                     </ul>
-                    @*<ul>
+                    
+                    
+                    
+                    <div class="tree">
+                        <ul>
                             <li>
                                 <a href="#">&</a>
                                 <ul>
-                                    <li>
-                                        <a href="#">&</a>
-                                        <ul>
-                                            <li>
-                                                <a href="#">=</a>
-                                                <ul>
-                                                    <li> <a href="#">A</a> </li>
-                                                    <li> <a href="#">B</a> </li>
-                                                </ul>
-                                            </li>
-                                            <li>
-                                                <a href="#">></a>
-                                                <ul>
-                                                    <li>
-                                                        <a href="#">&</a>
-                                                        <ul>
-                                                            <li>
-                                                                <a href="#">A</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">B</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#">~</a>
-                                                        <ul>
-                                                            <li>
-                                                                <a href="#">C</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
                                     <li>
                                         <a href="#">></a>
                                         <ul>
                                             <li>
                                                 <a href="#">A</a>
                                             </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">B</a>
+                                        <ul>
+                                            <li><a href="#">A</a></li>
                                             <li>
-                                                <a href="#">~</a>
+                                                <a href="#">B</a>
                                                 <ul>
                                                     <li>
-                                                        <a href="#">&</a>
-                                                        <ul>
-                                                            <li>
-                                                                <a href="#">A</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">B</a>
-                                                            </li>
-                                                        </ul>
+                                                        <a href="#">A</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">B</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">A</a>
                                                     </li>
                                                 </ul>
                                             </li>
+                                            <li><a href="#">B</a></li>
                                         </ul>
                                     </li>
                                 </ul>
                             </li>
-                        </ul>*@
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     }
 </div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryValidation")
+}

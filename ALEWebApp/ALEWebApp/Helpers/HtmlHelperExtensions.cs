@@ -34,6 +34,6 @@ namespace ALEWebApp.Helpers
 
         public static string LabelClass(this HtmlHelper html) => "col-3";
 
-        public static string ControlClass(this HtmlHelper html) => "col-9";
+        public static string ControlClass(this HtmlHelper html) => "form-control";
     }
 }

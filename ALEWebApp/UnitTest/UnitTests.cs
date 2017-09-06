@@ -75,17 +75,6 @@ namespace UnitTest
                   (?(monadic)(?!))              # Assert monadic stack is empty. All monadic expressions have closing brackets.
                   $"
                 , RegexOptions.IgnorePatternWhitespace);
-            /* @"^
-                 (
-                  [01A-Z](?![01A-Z])|
-                //(?<dyadic>[|&>=]\((?!,))|
-                //(?<comma-dyadic>,(?!\)))|
-                //(?<dBracket-comma>\))|
-                //(?<monadic>~\((?!\)))|
-                //(?<uBracket-monadic>\)))+
-                //(?(dyadic)(?!))(?(comma)(?!))(?(monadic)(?!))$"
-
-                */
 
             List<string> validPropostions = new List<string>
             {
@@ -101,6 +90,7 @@ namespace UnitTest
                 @"1",
                 @"0",
                 @"~(A)",
+                @"A"
 
             };
             foreach (var validPropostion in validPropostions)
