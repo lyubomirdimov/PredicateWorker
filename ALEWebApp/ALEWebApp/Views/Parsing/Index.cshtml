@@ -9,18 +9,39 @@
 
         <div class="row">
             <div class="col-6">
-                <div class="form-group row ">
+                <div class="h1">
+                    Example of valid Propositions
+                </div>
+                <div class="list-group">
+                    @foreach (var prop in Model.ExampleValidPropositions)
+                    {
+
+                        <a href="#" class="list-group-item list-group-item-action propositionExample">
+                            @prop
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+        <hr/>   
+        <div class="row">
+
+            <div class="col-3">
+
+                <div class="form-group">
                     @Html.LabelFor(m => m.AsciiLogicString, new { @class = Html.LabelClass() })
                     <div class="@Html.ControlClass()">
                         @Html.EditorFor(m => m.AsciiLogicString, new { htmlAttributes = new { @class = @Html.ControlClass() } })
                         @Html.ValidationMessageFor(m => m.AsciiLogicString)
                     </div>
                 </div>
+
+
+            </div>
+            <div class="col-9">
+                <button type="submit" class="btn btn-primary">Construct Tree</button>
             </div>
 
-            <div class="col-6">
-                <input type="submit" value="Parse" class="btn btn-primary" />
-            </div>
         </div>
         <div class="row">
             <div class="col-12">
@@ -41,30 +62,30 @@
                                     @helper ShowTree(IEnumerable<Node> children)
                                     {
 
-                                foreach (var node in children)
-                                {
-                                    if (node.Token.IsPredicate)
-                                    {
-                                            <li>
-                                                <a href="#">@node.Token.ToString()</a>
-                                            </li>
-                                    }
-                                    else if (node.Token.IsConnective)
-                                    {
-                                            <li>
-                                                <a href="#">@node.Token.ToString()</a>
-                                                <ul>
-                                                        @if (node.Children.Any())
-                                            {
-                                                            @ShowTree(node.Children)
+foreach (var node in children)
+{
+    if (node.Token.IsPredicate)
+    {
+            <li>
+                <a href="#">@node.Token.ToString()</a>
+            </li>
+    }
+    else if (node.Token.IsConnective)
+    {
+            <li>
+                <a href="#">@node.Token.ToString()</a>
+                <ul>
+                    @if (node.Children.Any())
+                    {
+                        @ShowTree(node.Children)
 
-                                                        }
-                                                </ul>
-                                            </li>
+                    }
+                </ul>
+            </li>
 
-                                    }
-                                }
-                                }
+    }
+}
+}
                                 </ul>
                             }
 

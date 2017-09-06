@@ -40,58 +40,51 @@ namespace Common
                 validationResult.Add("Two or more consacutive commas");
             }
 
-            bool isExpressionValid = true;
-            List<string> blocks = new List<string>();
-            Stack<Token> stackOfParenthesis = new Stack<Token>();
-            foreach (Token token in parsedTokens)
+            bool isValid = true;
+            Stack<Token> tokenStack = new Stack<Token>();
+            for (var i = 0; i < parsedTokens.Count; i++)
             {
-                if (token.IsOpeningParanthesis)
+                Token token = parsedTokens[i];
+                switch (token.Type)
                 {
-                    stackOfParenthesis.Push(token);
-                }
-                if (token.IsClosingParanthesis)
-                {
-                    Token openingParenthesis = stackOfParenthesis.Pop();
-
-                    int openingIndex = parsedTokens.IndexOf(openingParenthesis);
-                    int closingIndex = parsedTokens.IndexOf(token) - openingIndex;
-                    List<Token> symbolsBlock = parsedTokens.Skip(openingIndex - 1).Take(closingIndex + 2).ToList();
-                    string stringBlock = input.Substring(openingIndex - 1, closingIndex + 2);
-                    blocks.Add(stringBlock);
-
-                    if (symbolsBlock[0].IsConnective == false)
-                    {
-                        isExpressionValid = false;
+                    
+                    case TokenType.Negation:
+                        // Check if next token is openinng parenthesis
+                        if (parsedTokens[i + 1]?.IsOpeningParanthesis == false)
+                        {
+                            isValid = false;
+                            break;
+                        }
+                        // Check if it has a single propostion afterwards
                         break;
-                    }
-                    else
-                    {
 
-                        if (symbolsBlock[0].IsNegation)
-                        // There should be only one Proposition after the negation
+                    case TokenType.And:
+                    case TokenType.Or:
+                    case TokenType.Implication:
+                    case TokenType.BiImplication:
+                        // Check if next token is openinng parenthesis
+                        if (parsedTokens[i + 1]?.IsOpeningParanthesis == false)
                         {
-                            string withoutParanthesis = stringBlock.Substring(2, 1);
-                            if (singlePredicatePattern.IsMatch(withoutParanthesis))
-                            {
-                                continue;
-                            }
-
-                            
-
+                            isValid = false;
+                            break;
                         }
-                        else
-                        {
+                        // 
 
-                        }
-                    }
-                    // 
+                        break;
+                    case TokenType.Separator:
+                        break;
+                    case TokenType.Predicate:
+                    case TokenType.True:
+                    case TokenType.False:
+                    case TokenType.OpeningParanthesis:
+                        break;
+                    case TokenType.ClosingParanthesis:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
 
-            if (isExpressionValid == false)
-            {
-                validationResult.Add("Expression is not valid");
-            }
 
             return validationResult;
         }
