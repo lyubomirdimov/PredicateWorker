@@ -45,90 +45,54 @@
         </div>
         <div class="row">
             <div class="col-12 align-content-center">
-                <div class="tree">
-
-                    <ul>
-                        <li>
-                            @if (Model?.Tree != null)
-                            {
-                                <!-- Root -->
-                                <a href="#">@Model.Tree.Token.ToString()</a>
-                                <ul>
-
-                                    @ShowTree(Model.Tree.Children)
-
-                                    @helper ShowTree(IEnumerable<Node> children)
-                                    {
-
-foreach (var node in children)
-{
-    if (node.Token.IsPredicate)
-    {
-            <li>
-                <a href="#">@node.Token.ToString()</a>
-            </li>
-    }
-    else if (node.Token.IsConnective)
-    {
-            <li>
-                <a href="#">@node.Token.ToString()</a>
-                <ul>
-                    @if (node.Children.Any())
-                    {
-                        @ShowTree(node.Children)
-
-                    }
-                </ul>
-            </li>
-
-    }
-}
-}
-                                </ul>
-                            }
-
-                        </li>
-                    </ul>
-                    
-                    
-                    
+                <div class="parent">
                     <div class="tree">
+
                         <ul>
                             <li>
-                                <a href="#">&</a>
-                                <ul>
-                                    <li>
-                                        <a href="#">></a>
-                                        <ul>
-                                            <li>
-                                                <a href="#">A</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">B</a>
-                                        <ul>
-                                            <li><a href="#">A</a></li>
-                                            <li>
-                                                <a href="#">B</a>
-                                                <ul>
+                                @if (Model?.Tree != null)
+                                {
+                                    <!-- Root -->
+                                    <a href="#">@Model.Tree.Token.ToString()</a>
+                                    <ul>
+
+                                        @ShowTree(Model.Tree.Children)
+
+                                        @helper ShowTree(IEnumerable<Node> children)
+                                        {
+
+                                            foreach (var node in children)
+                                            {
+                                                if (node.Token.IsPredicate)
+                                                {
                                                     <li>
-                                                        <a href="#">A</a>
+                                                        <a href="#">@node.Token.ToString()</a>
                                                     </li>
+                                                }
+                                                else if (node.Token.IsConnective)
+                                                {
                                                     <li>
-                                                        <a href="#">B</a>
+                                                        <a href="#">@node.Token.ToString()</a>
+                                                        <ul>
+                                                            @if (node.Children.Any())
+                                                            {
+                                                                @ShowTree(node.Children)
+
+                                                            }
+                                                        </ul>
                                                     </li>
-                                                    <li>
-                                                        <a href="#">A</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="#">B</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
+
+                                                }
+                                            }
+                                        }
+                                    </ul>
+                                }
+
                             </li>
                         </ul>
+
+
+
                     </div>
                 </div>
             </div>
