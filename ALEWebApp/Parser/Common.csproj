@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Fare, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Fare.1.0.3\lib\net35\Fare.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LogicPropositionHelper.cs" />
     <Compile Include="LogicPropositionValidator.cs" />
     <Compile Include="ParsingHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -47,6 +51,9 @@
     <Compile Include="RandomLogicPropositionGenerator.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="TreeConstructor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

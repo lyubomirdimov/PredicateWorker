@@ -8,7 +8,7 @@
         @Html.AntiForgeryToken()
 
         <div class="row">
-            <div class="col-6">
+            <div class="col-9">
                 <div class="h3">
                     Examples of valid Propositions
                 </div>
@@ -22,7 +22,12 @@
                         </button>
                     }
                 </div>
+                <br/>
+                <button type="button" class="btn btn-primary" id="btnRandomProp">
+                    Generate random proposition
+                </button>
             </div>
+            
         </div>
         <hr />
         <div class="row">
@@ -34,7 +39,6 @@
                     @Html.EditorFor(m => m.InputProposition, new { htmlAttributes = new { @class = @Html.ControlClass(), @id = "tbxInputProposition" } })
                     @Html.ValidationMessageFor(m => m.InputProposition)
                 </div>
-
 
             </div>
             <div class="col-6"></div>
@@ -61,40 +65,44 @@
                                         @helper ShowTree(IEnumerable<Node> children)
                                         {
 
-                                            foreach (var node in children)
-                                            {
-                                                if (node.Token.IsPredicate)
-                                                {
-                                                    <li>
-                                                        <a href="#">@node.Token.ToString()</a>
-                                                    </li>
-                                                }
-                                                else if (node.Token.IsConnective)
-                                                {
-                                                    <li>
-                                                        <a href="#">@node.Token.ToString()</a>
-                                                        <ul>
-                                                            @if (node.Children.Any())
-                                                            {
-                                                                @ShowTree(node.Children)
+foreach (var node in children)
+{
+    if (node.Token.IsPredicate)
+    {
+            <li>
+                <a href="#">@node.Token.ToString()</a>
+            </li>
+    }
+    else if (node.Token.IsConnective)
+    {
+            <li>
+                <a href="#">@node.Token.ToString()</a>
+                <ul>
+                    @if (node.Children.Any())
+                    {
+                        @ShowTree(node.Children)
 
-                                                            }
-                                                        </ul>
-                                                    </li>
+                    }
+                </ul>
+            </li>
 
-                                                }
-                                            }
-                                        }
+    }
+}
+}
                                     </ul>
                                 }
 
                             </li>
                         </ul>
-
-
-
                     </div>
                 </div>
+            </div>
+
+            <div class="col-12">
+                <h3> Assignment 2; Truth table</h3>
+                <hr />
+
+
             </div>
         </div>
     }

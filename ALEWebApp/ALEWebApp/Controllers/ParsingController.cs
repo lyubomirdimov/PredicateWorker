@@ -41,6 +41,11 @@ namespace ALEWebApp.Controllers
         {
             return Json(LogicPropositionValidator.Validate(inputProposition));
         }
+
+        public ActionResult GenerateRandomProposition()
+        {
+            return Json("Success");
+        }
     }
 
 }
