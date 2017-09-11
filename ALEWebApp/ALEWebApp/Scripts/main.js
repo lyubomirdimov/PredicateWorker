@@ -4,15 +4,16 @@
         $("#tbxInputProposition").val(proposition);
     });
 
-    $("#btnRandomProp").click(function() {
-        $.ajax({
-            type: "POST",
-            url: "Parsing/GenerateRandomProposition",
-            contentType: "application/json; charset=utf-8",
-            success: function(data) {
-                alert("Not yet implemented");
-            }
-        });
+    $("#btnRandomProp").click(function () {
+        alert("Not yet implemented");
+        //$.ajax({
+        //    type: "POST",
+        //    url: "Parsing/GenerateRandomProposition",
+        //    contentType: "application/json; charset=utf-8",
+        //    success: function(data) {
+        //        alert("Not yet implemented");
+        //    }
+        //});
     });
 });
 

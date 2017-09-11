@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using Fare;
 
 
 namespace Common
@@ -12,15 +11,15 @@ namespace Common
             @"^                                 # Start of line
                   (                             # Either
                       [01A-Z](?![01A-Z])  |     # A predicate
-                      (?<dyadic>[|&>=]\((?!,))| # Start of dyadic
-                      (?<comma-dyadic>,(?!\)))| # Looks for comma followed by dyadic. Pops off the dyadic stack.
+                      (?<couple>[|&>=]\((?!,))| # Start of couple
+                      (?<comma-couple>,(?!\)))| # Looks for comma followed by couple. Pops off the couple stack.
                       (?<dBracket-comma>\))|    # Looks for ending bracket following comma. pops off comma stack. 
-                      (?<monadic>~\((?!\)))|    # Start of monadic function.
-                      (?<uBracket-monadic>\)))  # Looks for ending bracket for unary. Pops off the monadic stack. 
+                      (?<single>~\((?!\)))|     # Start of single function.
+                      (?<uBracket-single>\)))   # Looks for ending bracket for unary. Pops off the single stack. 
                   +                             # Any number of times.
-                  (?(dyadic)(?!))               # Assert dyadic stack is empty. All have a comma.
-                  (?(comma)(?!))                # Assert comma stack is empty. All dyadic commas followed by parenthesis.
-                  (?(monadic)(?!))              # Assert monadic stack is empty. All monadic expressions have closing brackets.
+                  (?(couple)(?!))               # Assert couple stack is empty. All have a comma.
+                  (?(comma)(?!))                # Assert comma stack is empty. All couple commas followed by parenthesis.
+                  (?(single)(?!))               # Assert single stack is empty. All single expressions have closing brackets.
                   $"
             , RegexOptions.IgnorePatternWhitespace);
 

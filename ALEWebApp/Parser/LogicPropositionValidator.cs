@@ -97,24 +97,24 @@ namespace Common
         }
 
 
-        /// <summary>
-        /// Check if Number of opening Paranthesis is equal to the number of closing paranthesis
-        /// </summary>
-        public static void CheckNumberOfParanthesis(List<Token> parsedSymbols, List<string> validationResult)
-        {
-            if (parsedSymbols.Select(x => x.IsOpeningParanthesis).ToList().Count != parsedSymbols.Select(x => x.IsClosingParanthesis).ToList().Count)
-            {
-                validationResult.Add("There is a problem with number of paranthesis");
-            }
-        }
+        ///// <summary>
+        ///// Check if Number of opening Paranthesis is equal to the number of closing paranthesis
+        ///// </summary>
+        //public static void CheckNumberOfParanthesis(List<Token> parsedSymbols, List<string> validationResult)
+        //{
+        //    if (parsedSymbols.Select(x => x.IsOpeningParanthesis).ToList().Count != parsedSymbols.Select(x => x.IsClosingParanthesis).ToList().Count)
+        //    {
+        //        validationResult.Add("There is a problem with number of paranthesis");
+        //    }
+        //}
 
-        public static void CheckNumberOfCommas(List<Token> parsedSymbols, List<string> validationResult)
-        {
-            if ((parsedSymbols.Select(x => x.IsOpeningParanthesis).ToList().Count - parsedSymbols.Select(x => x.IsNegation).ToList().Count) != parsedSymbols.Select(x => x.IsSeparator).ToList().Count)
-            {
-                validationResult.Add("Commas does not match");
-            }
-        }
+        //public static void CheckNumberOfCommas(List<Token> parsedSymbols, List<string> validationResult)
+        //{
+        //    if ((parsedSymbols.Select(x => x.IsOpeningParanthesis).ToList().Count - parsedSymbols.Select(x => x.IsNegation).ToList().Count) != parsedSymbols.Select(x => x.IsSeparator).ToList().Count)
+        //    {
+        //        validationResult.Add("Commas does not match");
+        //    }
+        //}
 
         /// <summary>
         /// Removes White spaces from string
