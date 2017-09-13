@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using Common;
 
 namespace ConsoleAppTest
@@ -74,20 +75,69 @@ namespace ConsoleAppTest
             //    Console.WriteLine(block);
             //}
 
-            //Console.ReadLine();
+            input = ">(&(A,B),~(C))";
+            List<Token> parsedString = input.ParseLogicalProposition();
+            
+
+
+            Table table = new Table();
+
+            // Construct header row
+            List<Token> predicateTokens = parsedString.Where(x => x.IsPredicate && x.Type != TokenType.True && x.Type != TokenType.False).ToList();
+            predicateTokens = predicateTokens.OrderBy(x => x.ToString()).ToList();
+            TableRow headerRow = new TableRow();
+            foreach (var headerToken in predicateTokens)
+            {
+                headerRow.Cells.Add(new TableCell() { Text = headerToken.ToString() });
+            }
+            // Add result cell at the end of header row
+            headerRow.Cells.Add(new TableCell() { Text = "Result" });
+            table.Rows.Add(headerRow); // Add header row
+
+            // Data construction row by row
+            int binaryLength = predicateTokens.Count;
+            double numberOfRows = Math.Pow(2, predicateTokens.Count);
+            for (int i = 0; i < numberOfRows; i++)
+            {
+                TableRow dataRow = new TableRow();
+                Char[] binaryValue = ToBin(i, binaryLength).ToCharArray();
+                foreach (var predValue in binaryValue)
+                {
+                    TableCell newTableCell = new TableCell(){Text = predValue.ToString()};
+                    dataRow.Cells.Add(newTableCell);
+                }
+                // calculalte result
+                Node propositionTree = TreeConstructor.ConstructTree(parsedString);
+                foreach (var predicateToken in predicateTokens)
+                {
+                    // Replace
+                    //BFS(propositionTree,predicateToken,);
+                }
+            }
+
+
+
+
+            Console.ReadLine();
 
         }
 
+        public static string ToBin(int value, int len)
+        {
+            return (len > 1 ? ToBin(value >> 1, len - 1) : null) + "01"[value & 1];
+        }
 
-
-        private static void BFS(Node parentNode)
+        private static void BFS(Node parentNode, string predicate, TokenType replacement)
         {
             Queue q = new Queue();
             q.Enqueue(parentNode);
             while (q.Count > 0)
             {
                 Node n = (Node)q.Dequeue();
-                Console.WriteLine(n.Token.ToString());
+                if (n.Token.ToString() == predicate)
+                {
+                    n.Token.Type = replacement;
+                }
                 foreach (var nChild in n.Children)
                 {
                     q.Enqueue(nChild);
