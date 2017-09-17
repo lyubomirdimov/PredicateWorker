@@ -48,10 +48,11 @@
     public class Token
     {
         public TokenType Type { get; set; }
-        public char Char { get; }
+        public char Char { get; private set; }
         public bool IsConnective { get; } = false;
         public bool IsParanthesis { get; } = false;
         public bool IsPredicate { get; } = false;
+        public bool IsTrueOrFalse { get; set; } = false;
         public bool IsValid { get; set; } = true;
         public bool IsNegation => Type == TokenType.Negation;
         public bool IsOpeningParanthesis => Type == TokenType.OpeningParanthesis;
@@ -102,11 +103,11 @@
                         break;
                     case '0':
                         Type = TokenType.False;
-                        IsPredicate = true;
+                        IsTrueOrFalse = true;
                         break;
                     case '1':
                         Type = TokenType.True;
-                        IsPredicate = true;
+                        IsTrueOrFalse = true;
                         break;
                     default:
                         Type = TokenType.Predicate;
@@ -116,6 +117,22 @@
                 Char = (char)c;
             }
         }
+
+        //public void SetAsTrueOrFalse(bool value)
+        //{
+        //    if (value)
+        //    {
+        //        Char = '1';
+        //        Type = TokenType.True;
+        //        IsTrueOrFalse = true;
+        //    }
+        //    else
+        //    {
+        //        Char = '0';
+        //        Type = TokenType.False;
+        //        IsTrueOrFalse = false;
+        //    }
+        //}
 
         public override string ToString() => Char.ToString();
     }

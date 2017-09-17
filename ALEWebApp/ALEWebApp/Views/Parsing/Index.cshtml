@@ -101,7 +101,34 @@ foreach (var node in children)
             <div class="col-12">
                 
                 <hr />
+                @if (Model.TableScheme != null)
+                {
+                    <table class="table">
+                        <thead class="thead-inverse">
+                        <tr>
+                            @foreach (var tableHeader in Model.TableScheme.TableHeaders)
+                            {
+                                <th>@tableHeader</th>
+                            }
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tableRow in Model.TableScheme.DataRows)
+                            {
+                                <tr>
+                                    @foreach (var booleanValue in tableRow.Values)
+                                    {
+                                        <td>
+                                            @{ string val = booleanValue ? 1.ToString() : 0.ToString(); }
+                                            @val
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
 
+                    </table>
+                }
 
             </div>
         </div>

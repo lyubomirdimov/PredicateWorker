@@ -19,6 +19,7 @@ namespace ALEWebApp.Models
 
         public Node Tree { get; set; }
 
+        public TableScheme TableScheme { get; set; }
         public List<string> ExampleValidPropositions => new List<string>
         {
             "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))",
@@ -28,5 +29,17 @@ namespace ALEWebApp.Models
             //">(&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B)))),&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B)))))"
 
         };
+    }
+    public class TableScheme
+    {
+        public List<string> TableHeaders { get; set; } = new List<string>();
+        public List<DataRow> DataRows { get; set; } = new List<DataRow>();
+        public int NrOfDataRows { get; set; }
+    }
+    public class DataRow
+    {
+        public int RowNum { get; set; }
+        public List<bool> Values { get; set; } = new List<bool>();
+
     }
 }

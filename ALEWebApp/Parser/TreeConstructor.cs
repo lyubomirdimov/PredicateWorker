@@ -37,7 +37,7 @@ namespace Common
                         parentNode = newNode;
                     }
                 }
-                else if (currentSymbol.IsPredicate)
+                else if (currentSymbol.IsPredicate || currentSymbol.IsTrueOrFalse)
                 // Predicates are always leaves, they don't have children
                 {
                     Node newNode = new Node(Guid.NewGuid(), currentSymbol);
