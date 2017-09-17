@@ -20,7 +20,7 @@ namespace ALEWebApp.Controllers
 
 
         [ValidateAntiForgeryToken]
-        public ActionResult Parse(LogicStatementViewModel viewModel)
+        public ActionResult Construct(LogicStatementViewModel viewModel)
         {
             if (ModelState.IsValid == false)
             {
@@ -33,10 +33,15 @@ namespace ALEWebApp.Controllers
             viewModel.Tree = propositionTree;
 
 
+            viewModel.TableScheme = ConstructTableScheme( parsedString, propositionTree);
+
+            return View("Index", viewModel);
+        }
+
+        private TableScheme ConstructTableScheme(List<Token> parsedString, Node propositionTree)
+        {
             // Construct Table
             TableScheme tableScheme = new TableScheme();
-
-            //            Table table = new Table();
 
             // Construct header row
             List<Token> predicateTokens = parsedString.Where(x => x.IsPredicate).GroupBy(x => x.Char).Select(x => x.First()).ToList();
@@ -76,9 +81,7 @@ namespace ALEWebApp.Controllers
                 tableScheme.DataRows.Add(row);
             }
 
-            viewModel.TableScheme = tableScheme;
-
-            return View("Index", viewModel);
+            return tableScheme;
         }
 
 
@@ -95,7 +98,7 @@ namespace ALEWebApp.Controllers
 
                 switch (tree.Token.Type)
                 {
-                    case TokenType.And:                    
+                    case TokenType.And:
                         value = booleanResults[0] & booleanResults[1]; // P And Q
                         break;
                     case TokenType.Or:

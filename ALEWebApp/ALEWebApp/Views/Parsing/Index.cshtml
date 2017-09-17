@@ -3,7 +3,7 @@
 @using Common
 @model ALEWebApp.Models.LogicStatementViewModel
 <div class="col-12 p-5 content-wrapper">
-    @using (Html.BeginForm("Parse", "Parsing", FormMethod.Post))
+    @using (Html.BeginForm("Construct", "Parsing", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
@@ -43,7 +43,7 @@
             </div>
             <div class="col-6"></div>
             <div class="col-12">
-                <button type="submit" class="btn btn-primary">Construct Tree</button>
+                <button type="submit" class="btn btn-primary">Construct</button>
             </div>
 
         </div>
