@@ -2,8 +2,37 @@
 @using ALEWebApp.Helpers
 @using Common
 @model ALEWebApp.Models.LogicStatementViewModel
+
+<!-- Helper method for recursively constructing a tree-->
+@helper ShowTree(IEnumerable<Node> children)
+{
+
+foreach (var node in children)
+{
+    if (node.Token.IsPredicate)
+    {
+            <li>
+                <a href="#">@node.Token.ToString()</a>
+            </li>
+    }
+    else if (node.Token.IsConnective)
+    {
+            <li>
+                <a href="#">@node.Token.ToString()</a>
+                <ul>
+                    @if (node.Children.Any())
+                    {
+                        @ShowTree(node.Children)
+
+                    }
+                </ul>
+            </li>
+
+    }
+}
+}
 <div class="col-12 p-5 content-wrapper">
-    @using (Html.BeginForm("Construct", "Parsing", FormMethod.Post))
+    @using (Html.BeginForm("Construct", "Main", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
@@ -22,12 +51,12 @@
                         </button>
                     }
                 </div>
-                <br/>
+                <br />
                 <button type="button" class="btn btn-primary" id="btnRandomProp">
                     Generate random proposition
                 </button>
             </div>
-            
+
         </div>
         <hr />
         <div class="row">
@@ -59,36 +88,7 @@
                                     <!-- Root -->
                                     <a href="#">@Model.Tree.Token.ToString()</a>
                                     <ul>
-
                                         @ShowTree(Model.Tree.Children)
-
-                                        @helper ShowTree(IEnumerable<Node> children)
-                                        {
-
-foreach (var node in children)
-{
-    if (node.Token.IsPredicate)
-    {
-            <li>
-                <a href="#">@node.Token.ToString()</a>
-            </li>
-    }
-    else if (node.Token.IsConnective)
-    {
-            <li>
-                <a href="#">@node.Token.ToString()</a>
-                <ul>
-                    @if (node.Children.Any())
-                    {
-                        @ShowTree(node.Children)
-
-                    }
-                </ul>
-            </li>
-
-    }
-}
-}
                                     </ul>
                                 }
 
@@ -99,7 +99,7 @@ foreach (var node in children)
             </div>
 
             <div class="col-12">
-                
+
                 <hr />
                 @if (Model.TableScheme != null)
                 {
@@ -113,18 +113,63 @@ foreach (var node in children)
                         </tr>
                         </thead>
                         <tbody>
-                            @foreach (var tableRow in Model.TableScheme.DataRows)
-                            {
-                                <tr>
-                                    @foreach (var booleanValue in tableRow.Values)
-                                    {
-                                        <td>
-                                            @{ string val = booleanValue ? 1.ToString() : 0.ToString(); }
-                                            @val
-                                        </td>
+                        @foreach (var tableRow in Model.TableScheme.DataRows)
+                        {
+                            <tr>
+                                @foreach (var cellValue in tableRow.Values)
+                                {
+                                    <td>                                            
+                                        @cellValue
+                                    </td>
+                                }
+                                <td>
+                                    @{
+                                        string res = tableRow.Result ? "1" : "0";
                                     }
-                                </tr>
+                                    @res
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+
+                    </table>
+                }
+
+
+            </div>
+
+            <div class="col-12">
+
+                <hr />
+                @if (Model.TableSchemeSimplified != null)
+                {
+                    <table class="table">
+                        <thead class="thead-inverse">
+                        <tr>
+                            @foreach (var tableHeader in Model.TableSchemeSimplified.TableHeaders)
+                            {
+                                <th>@tableHeader</th>
                             }
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var tableRow in Model.TableSchemeSimplified.DataRows)
+                        {
+                            <tr>
+                                @foreach (var cellValue in tableRow.Values)
+                                {
+                                    <td>                                            
+                                        @cellValue
+                                    </td>
+                                }
+                                <td>
+                                    @{
+                                        string res = tableRow.Result ? "1" : "0";
+                                    }
+                                    @res
+                                </td>
+                            </tr>
+                        }
                         </tbody>
 
                     </table>
@@ -132,7 +177,7 @@ foreach (var node in children)
 
             </div>
         </div>
-    }
+}
 </div>
 
 @section Scripts{

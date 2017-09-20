@@ -14,12 +14,13 @@ namespace ALEWebApp.Models
         
         [Display(Name = "Logical Propositon")]
         [Required(ErrorMessage = "Logical Proposition is Required")]
-        [Remote("ValidateProposition","Parsing",HttpMethod = "POST",ErrorMessage = "Invalid Logical Proposition")]
+        [Remote("ValidateProposition","Main",HttpMethod = "POST",ErrorMessage = "Invalid Logical Proposition")]
         public string InputProposition { get; set; }
 
         public Node Tree { get; set; }
 
         public TableScheme TableScheme { get; set; }
+        public TableScheme TableSchemeSimplified { get; set; }
         public List<string> ExampleValidPropositions => new List<string>
         {
             "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))",
@@ -39,7 +40,8 @@ namespace ALEWebApp.Models
     public class DataRow
     {
         public int RowNum { get; set; }
-        public List<bool> Values { get; set; } = new List<bool>();
+        public List<string> Values { get; set; } = new List<string>();
+        public bool Result { get; set; }
 
     }
 }

@@ -7,10 +7,11 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using ALEWebApp.Models;
 using Common;
+using Microsoft.Ajax.Utilities;
 
 namespace ALEWebApp.Controllers
 {
-    public class ParsingController : Controller
+    public class MainController : Controller
     {
         public ActionResult Index()
         {
@@ -33,8 +34,9 @@ namespace ALEWebApp.Controllers
             viewModel.Tree = propositionTree;
 
 
-            viewModel.TableScheme = ConstructTableScheme( parsedString, propositionTree);
+            viewModel.TableScheme = ConstructTableScheme(parsedString, propositionTree);
 
+            viewModel.TableSchemeSimplified = SimplifyTableScheme(parsedString, propositionTree);
             return View("Index", viewModel);
         }
 
@@ -74,18 +76,73 @@ namespace ALEWebApp.Controllers
                     Tuple<Token, bool> replacingToken = new Tuple<Token, bool>(predicateToken, predicateValue);
 
                     subsitutionTuples.Add(replacingToken);
-                    row.Values.Add(predicateValue);
+                    row.Values.Add(predicateValue ? "1" : "0");
                 }
-                bool resultVal = RecusivelyCalculate(propositionTree, subsitutionTuples);
-                row.Values.Add(resultVal);
+                bool resultVal = CalculateRowResultRecur(propositionTree, subsitutionTuples);
+                row.Result = resultVal;
                 tableScheme.DataRows.Add(row);
             }
 
             return tableScheme;
         }
 
+        private TableScheme SimplifyTableScheme(List<Token> parsedString, Node propositionTree)
+        {
+            TableScheme resultTblScheme = ConstructTableScheme(parsedString, propositionTree);
+            List<DataRow> rowsChanged = new List<DataRow>();
+            foreach (DataRow row in resultTblScheme.DataRows)
+            {
+                DataRow newRow = new DataRow
+                {
+                    Result = row.Result,
+                    RowNum = row.RowNum,
+                    Values = row.Values.ToList()
+                };
+                List<DataRow> rowsToCompareWith = resultTblScheme.DataRows.Where(x => x.Result == row.Result && x.RowNum != row.RowNum).ToList();
+                foreach (DataRow rowToCompare in rowsToCompareWith)
+                {
+                    List<int> indecesForChange = new List<int>();
+                    for (int index = 0; index < row.Values.Count; index++)
+                    {
+                        if (row.Values[index] == "*") continue;
 
-        public bool RecusivelyCalculate(Node tree, List<Tuple<Token, bool>> substitutionTokens)
+                        if (row.Values[index] != rowToCompare.Values[index])
+                        {
+                            indecesForChange.Add(index);
+                        }
+                    }
+                    if (indecesForChange.Count == 1)
+                    {
+                        newRow.Values[indecesForChange[0]] = "*";
+                    }
+
+                }
+                rowsChanged.Add(newRow);
+            }
+            // Check for rows which have same values, then remove one of them
+            List<DataRow> rowsToBeRemoved = new List<DataRow>();
+            for (var i = 0; i < rowsChanged.Count; i++)
+            {
+                if (i == rowsChanged.Count - 1) break;
+
+                DataRow dataRowUpper = rowsChanged[i];
+                for (int j = i + 1; j < rowsChanged.Count; j++)
+                {
+                    DataRow dataRowLower = rowsChanged[j];
+                    if (dataRowUpper.Values.SequenceEqual(dataRowLower.Values))
+                    {
+                        rowsToBeRemoved.Add(dataRowUpper);
+                    }
+                }
+            }
+            rowsChanged = rowsChanged.Except(rowsToBeRemoved).ToList();
+            // Assign rownum Again
+            resultTblScheme.DataRows = rowsChanged;
+
+            return resultTblScheme;
+        }
+
+        public bool CalculateRowResultRecur(Node tree, List<Tuple<Token, bool>> substitutionTokens)
         {
             bool value = false;
             if (tree.Token.IsConnective)
@@ -93,7 +150,7 @@ namespace ALEWebApp.Controllers
                 List<bool> booleanResults = new List<bool>();
                 foreach (Node child in tree.Children)
                 {
-                    booleanResults.Add(RecusivelyCalculate(child, substitutionTokens));
+                    booleanResults.Add(CalculateRowResultRecur(child, substitutionTokens));
                 }
 
                 switch (tree.Token.Type)
@@ -129,12 +186,13 @@ namespace ALEWebApp.Controllers
                 value = replacementTuple?.Item2 ?? throw new ArgumentNullException();
             }
             return value;
-
         }
         public static string ToBin(int value, int len)
         {
             return (len > 1 ? ToBin(value >> 1, len - 1) : null) + "01"[value & 1];
         }
+
+
         /// <summary>
         /// Validates weather or not input is a valid Logical proposition
         /// </summary>
