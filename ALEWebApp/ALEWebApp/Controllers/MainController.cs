@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -33,13 +34,36 @@ namespace ALEWebApp.Controllers
             Node propositionTree = TreeConstructor.ConstructTree(parsedString);
             viewModel.Tree = propositionTree;
 
-
             viewModel.TableScheme = ConstructTableScheme(parsedString, propositionTree);
-
             viewModel.TableSchemeSimplified = SimplifyTableScheme(parsedString, propositionTree);
+
+            // Hash code
+            string hashValue = HashValue(viewModel);
+            viewModel.TableSchemeHashCode = hashValue;
+
             return View("Index", viewModel);
         }
 
+        /// <summary>
+        /// Get hashvalue from result of logical proposition truth table
+        /// </summary>
+        private static string HashValue(LogicStatementViewModel viewModel)
+        {
+            string binaryValue = string.Empty;
+            int nrOfPredicates = viewModel.TableScheme.TableHeaders.Count - 1;
+            binaryValue = viewModel.TableScheme.DataRows.Aggregate(binaryValue, (current, row) => current + (row.Result ? "1" : "0"));
+            long binaryLong = Convert.ToInt64(binaryValue);
+            string hashValue = String.Format("{0:X}", binaryLong);
+            return hashValue;
+        }
+
+
+        /// <summary>
+        /// Table Scheme construction from parsed logical proposition and constructed node tree for the proposition
+        /// </summary>
+        /// <param name="parsedString">  a list of tokens; the parsed logical proposition</param>
+        /// <param name="propositionTree"> the tree constructed from the logical proposition</param>
+        /// <returns></returns>
         private TableScheme ConstructTableScheme(List<Token> parsedString, Node propositionTree)
         {
             // Construct Table
@@ -58,31 +82,39 @@ namespace ALEWebApp.Controllers
             // Data construction row by row
             int binaryLength = predicateTokens.Count;
             double numberOfRows = Math.Pow(2, predicateTokens.Count);
+
             for (int rowNum = 0; rowNum < numberOfRows; rowNum++)
             {
                 DataRow row = new DataRow
                 {
-                    RowNum = rowNum
+                    RowNum = rowNum // Give rownumber to each row
                 };
 
                 List<Tuple<Token, bool>> subsitutionTuples = new List<Tuple<Token, bool>>();
+
+                // Transform the rownumber to Binary, ex. rownum - 1, with 3 predicates, results in 001
+                // The transformed rownumber is casted to array of chars
                 char[] rowNumIntoBinary = ToBin(rowNum, binaryLength).ToCharArray();
 
                 for (var j = 0; j < rowNumIntoBinary.Length; j++)
+                // for each binary number
                 {
                     // Asign value to Row values and create a tuple for replacing tokens
                     Token predicateToken = predicateTokens[j];
                     bool predicateValue = rowNumIntoBinary[j] == '1';
                     Tuple<Token, bool> replacingToken = new Tuple<Token, bool>(predicateToken, predicateValue);
-
                     subsitutionTuples.Add(replacingToken);
+
                     row.Values.Add(predicateValue ? "1" : "0");
                 }
+                // calculate the result of the row
                 bool resultVal = CalculateRowResultRecur(propositionTree, subsitutionTuples);
                 row.Result = resultVal;
+
+                // add row to the table
                 tableScheme.DataRows.Add(row);
             }
-
+            
             return tableScheme;
         }
 
@@ -142,33 +174,42 @@ namespace ALEWebApp.Controllers
             return resultTblScheme;
         }
 
+
+        /// <summary>
+        /// Recursively calculates the value of a row in a table
+        /// </summary>
+        /// <param name="tree"> Tree constructed from the logical proposition</param>
+        /// <param name="substitutionTokens"> Tuple list, which replaces predicates in the tree with appropriate true/false values</param>
+        /// <returns></returns>
         public bool CalculateRowResultRecur(Node tree, List<Tuple<Token, bool>> substitutionTokens)
         {
             bool value = false;
             if (tree.Token.IsConnective)
             {
+                // Recusively get boolean values of the children
                 List<bool> booleanResults = new List<bool>();
                 foreach (Node child in tree.Children)
                 {
-                    booleanResults.Add(CalculateRowResultRecur(child, substitutionTokens));
+                    booleanResults.Add(CalculateRowResultRecur(child, substitutionTokens)); // Recursive call
                 }
 
+                // Calculate value based on the conective node
                 switch (tree.Token.Type)
                 {
                     case TokenType.And:
-                        value = booleanResults[0] & booleanResults[1]; // P And Q
+                        value = booleanResults[0] & booleanResults[1];  // P And Q
                         break;
                     case TokenType.Or:
-                        value = booleanResults[0] | booleanResults[1]; // P or Q 
+                        value = booleanResults[0] | booleanResults[1];  // P or Q 
                         break;
                     case TokenType.Negation:
-                        value = !booleanResults[0]; // Not P
+                        value = !booleanResults[0];                     // Not P
                         break;
                     case TokenType.Implication:
                         value = !booleanResults[0] | booleanResults[1]; // not P or Q
                         break;
                     case TokenType.BiImplication:
-                        value = booleanResults[0] == booleanResults[1];
+                        value = booleanResults[0] == booleanResults[1]; // P <=> Q
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -181,12 +222,20 @@ namespace ALEWebApp.Controllers
             }
             if (tree.Token.IsPredicate)
             {
+                // Replace a predicate from the tree with a boolean
                 Tuple<Token, bool> replacementTuple = substitutionTokens.FirstOrDefault(x => x.Item1.Char == tree.Token.Char);
 
                 value = replacementTuple?.Item2 ?? throw new ArgumentNullException();
             }
             return value;
         }
+
+        /// <summary>
+        /// Convert integer value to Binary, with certain length
+        /// </summary>
+        /// <param name="value"> the integer value to be transformed</param>
+        /// <param name="len"> length of the binary </param>
+        /// <returns></returns>
         public static string ToBin(int value, int len)
         {
             return (len > 1 ? ToBin(value >> 1, len - 1) : null) + "01"[value & 1];
@@ -204,8 +253,10 @@ namespace ALEWebApp.Controllers
             return Json(LogicPropositionValidator.Validate(inputProposition));
         }
 
+
         public ActionResult GenerateRandomProposition()
         {
+            // TODO: Random props
             return Json("Success");
         }
     }

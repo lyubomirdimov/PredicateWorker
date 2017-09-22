@@ -21,6 +21,7 @@ namespace ALEWebApp.Models
 
         public TableScheme TableScheme { get; set; }
         public TableScheme TableSchemeSimplified { get; set; }
+        public string TableSchemeHashCode { get; set; }
         public List<string> ExampleValidPropositions => new List<string>
         {
             "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))",
