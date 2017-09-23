@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\GeneralHelper.cs" />
     <Compile Include="Helpers\HashCodeHelper.cs" />
     <Compile Include="Helpers\LogicPropositionValidator.cs" />
     <Compile Include="Helpers\ParsingHelper.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Helpers\RandomLogicPropositionGenerator.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Helpers\TreeConstructor.cs" />
+    <Compile Include="TableConstruction\TableConstructionHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

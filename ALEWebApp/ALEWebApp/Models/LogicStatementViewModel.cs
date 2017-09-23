@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using Common;
 using Common.Models;
+using Common.TableConstruction;
 
 namespace ALEWebApp.Models
 {
@@ -33,18 +34,5 @@ namespace ALEWebApp.Models
 
         };
     }
-    public class TableScheme
-    {
-        public List<string> TableHeaders { get; set; } = new List<string>();
-        public List<DataRow> DataRows { get; set; } = new List<DataRow>();
-        public int NrOfDataRows => DataRows.Count;
-        public int NrOfPredicates => DataRows.Count == 0 ? 0 : DataRows[0].Values.Count;
-    }
-    public class DataRow
-    {
-        public int RowNum { get; set; }
-        public List<string> Values { get; set; } = new List<string>();
-        public bool Result { get; set; }
-
-    }
+   
 }
