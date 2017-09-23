@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Common;
+using Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTest
@@ -21,7 +22,7 @@ namespace UnitTest
         [TestMethod]
         public void CheckValidLogicalProposition()
         {
-            Regex r = LogicPropositionHelper.PropositionalRegex;
+            Regex r = LogicPropositionValidator.PropositionalRegex;
 
             List<string> validPropostions = new List<string>
             {

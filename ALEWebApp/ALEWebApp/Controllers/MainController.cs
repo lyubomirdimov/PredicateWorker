@@ -8,6 +8,8 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using ALEWebApp.Models;
 using Common;
+using Common.Helpers;
+using Common.Models;
 using Microsoft.Ajax.Utilities;
 
 namespace ALEWebApp.Controllers
@@ -50,10 +52,8 @@ namespace ALEWebApp.Controllers
         private static string HashValue(LogicStatementViewModel viewModel)
         {
             string binaryValue = string.Empty;
-            int nrOfPredicates = viewModel.TableScheme.TableHeaders.Count - 1;
             binaryValue = viewModel.TableScheme.DataRows.Aggregate(binaryValue, (current, row) => current + (row.Result ? "1" : "0"));
-            long binaryLong = Convert.ToInt64(binaryValue);
-            string hashValue = String.Format("{0:X}", binaryLong);
+            string hashValue = binaryValue.BinaryStringToHexString();
             return hashValue;
         }
 
@@ -114,64 +114,121 @@ namespace ALEWebApp.Controllers
                 // add row to the table
                 tableScheme.DataRows.Add(row);
             }
-            
+
             return tableScheme;
         }
 
         private TableScheme SimplifyTableScheme(List<Token> parsedString, Node propositionTree)
         {
-            TableScheme resultTblScheme = ConstructTableScheme(parsedString, propositionTree);
-            List<DataRow> rowsChanged = new List<DataRow>();
-            foreach (DataRow row in resultTblScheme.DataRows)
-            {
-                DataRow newRow = new DataRow
-                {
-                    Result = row.Result,
-                    RowNum = row.RowNum,
-                    Values = row.Values.ToList()
-                };
-                List<DataRow> rowsToCompareWith = resultTblScheme.DataRows.Where(x => x.Result == row.Result && x.RowNum != row.RowNum).ToList();
-                foreach (DataRow rowToCompare in rowsToCompareWith)
-                {
-                    List<int> indecesForChange = new List<int>();
-                    for (int index = 0; index < row.Values.Count; index++)
-                    {
-                        if (row.Values[index] == "*") continue;
+            TableScheme tblScheme = ConstructTableScheme(parsedString, propositionTree);
+            bool completed = false;
 
-                        if (row.Values[index] != rowToCompare.Values[index])
+
+            while (completed == false)
+            {
+                completed = true;
+                List<DataRow> simplifiedDataRows = new List<DataRow>();
+                int rowCount = 0;
+                List<int> alreadySimplifiedRowsIndeces = new List<int>();
+                for (int i = 0; i < tblScheme.NrOfDataRows; i++)
+                {
+                    DataRow currentRow = tblScheme.DataRows[i];
+                    bool isRowSimplified = false;
+                    for (int j = i + 1; j < tblScheme.NrOfDataRows; j++)
+                    {
+                        DataRow rowToCompare = tblScheme.DataRows[j];
+
+                        // If the row have different result, then don't compare
+                        if (currentRow.Result != rowToCompare.Result) continue;
+
+                        List<int> indecesForChange = new List<int>();
+                        for (int columnNr = 0; columnNr < tblScheme.NrOfPredicates; columnNr++)
                         {
-                            indecesForChange.Add(index);
+                            if (currentRow.Values[columnNr] != rowToCompare.Values[columnNr])
+                            {
+                                indecesForChange.Add(columnNr);
+                            }
                         }
-                    }
-                    if (indecesForChange.Count == 1)
-                    {
+
+                        // If there are more than one column which differs, then continue iterations
+                        if (indecesForChange.Count != 1) continue;
+
+                        DataRow newRow = new DataRow
+                        {
+                            Result = currentRow.Result,
+                            RowNum = rowCount,
+                            Values = currentRow.Values.ToList()
+                        };
                         newRow.Values[indecesForChange[0]] = "*";
+                        if (simplifiedDataRows.Any(x => x.Values.SequenceEqual(newRow.Values)) == false)
+                        {
+                            simplifiedDataRows.Add(newRow);
+                        }
+
+                        alreadySimplifiedRowsIndeces.Add(i);
+                        alreadySimplifiedRowsIndeces.Add(j);
+                        isRowSimplified = true;
+                        completed = false;
                     }
 
-                }
-                rowsChanged.Add(newRow);
-            }
-            // Check for rows which have same values, then remove one of them
-            List<DataRow> rowsToBeRemoved = new List<DataRow>();
-            for (var i = 0; i < rowsChanged.Count; i++)
-            {
-                if (i == rowsChanged.Count - 1) break;
-
-                DataRow dataRowUpper = rowsChanged[i];
-                for (int j = i + 1; j < rowsChanged.Count; j++)
-                {
-                    DataRow dataRowLower = rowsChanged[j];
-                    if (dataRowUpper.Values.SequenceEqual(dataRowLower.Values))
+                    if (isRowSimplified == false && alreadySimplifiedRowsIndeces.Contains(i) == false)
                     {
-                        rowsToBeRemoved.Add(dataRowUpper);
+                        simplifiedDataRows.Add(currentRow);
                     }
                 }
+                tblScheme.DataRows = simplifiedDataRows;
             }
-            rowsChanged = rowsChanged.Except(rowsToBeRemoved).ToList();
-            // Assign rownum Again
-            resultTblScheme.DataRows = rowsChanged;
+            //List<DataRow> rowsChanged = new List<DataRow>();
+            //for (var i = 0; i < tblScheme.DataRows.Count; i++)
+            //{
+            //    DataRow row = tblScheme.DataRows[i];
+            //    DataRow newRow = new DataRow
+            //    {
+            //        Result = row.Result,
+            //        RowNum = row.RowNum,
+            //        Values = row.Values.ToList()
+            //    };
+            //    List<DataRow> rowsToCompareWith = tblScheme.DataRows.Where(x => x.Result == row.Result && x.RowNum != row.RowNum).ToList();
+            //    foreach (DataRow rowToCompare in rowsToCompareWith)
+            //    {
+            //        List<int> indecesForChange = new List<int>();
+            //        for (int index = 0; index < row.Values.Count; index++)
+            //        {
+            //            if (row.Values[index] == "*") continue;
 
-            return resultTblScheme;
+            //            if (row.Values[index] != rowToCompare.Values[index])
+            //            {
+            //                indecesForChange.Add(index);
+            //            }
+            //        }
+            //        if (indecesForChange.Count == 1)
+            //        {
+            //            newRow.Values[indecesForChange[0]] = "*";
+            //        }
+            //    }
+            //    rowsChanged.Add(newRow);
+            //}
+            // Check for rows which have same values, then remove one of them
+            //List<DataRow> rowsToBeRemoved = new List<DataRow>();
+            //for (var i = 0; i < rowsChanged.Count; i++)
+            //{
+            //    if (i == rowsChanged.Count - 1) break;
+
+            //    DataRow dataRowUpper = rowsChanged[i];
+            //    for (int j = i + 1; j < rowsChanged.Count; j++)
+            //    {
+            //        DataRow dataRowLower = rowsChanged[j];
+            //        if (dataRowUpper.Values.SequenceEqual(dataRowLower.Values))
+            //        {
+            //            rowsToBeRemoved.Add(dataRowUpper);
+            //        }
+            //    }
+            //}
+            //rowsChanged = rowsChanged.Except(rowsToBeRemoved).ToList();
+            // Assign rownum Again
+            //tblScheme.DataRows = rowsChanged;
+
+            return tblScheme;
         }
 
 

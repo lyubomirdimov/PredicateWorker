@@ -1,6 +1,7 @@
 ﻿@using System.Collections
 @using ALEWebApp.Helpers
 @using Common
+@using Common.Models
 @model ALEWebApp.Models.LogicStatementViewModel
 
 <!-- Helper method for recursively constructing a tree-->
@@ -78,6 +79,8 @@ foreach (var node in children)
         </div>
         <div class="row">
             <div class="col-12 align-content-center">
+                <hr/>
+                <h2> Tree Construct (Assignment 1)</h2>
                 <div class="parent">
                     <div class="tree">
 
@@ -101,7 +104,9 @@ foreach (var node in children)
             <div class="col-12">
 
                 <hr />
-                @*<h1>@Model.TableSchemeHashCode</h1>*@
+                
+                <h2>Non simplified Truth Table (Assignment 2)</h2>
+                <h3><small>Result as Hash code: </small><span style="color: coral">@Model.TableSchemeHashCode</span></h3>
                 @if (Model.TableScheme != null)
                 {
                     
@@ -143,6 +148,7 @@ foreach (var node in children)
             <div class="col-12">
 
                 <hr />
+                <h2> Simplified Truth Table (Assignment 3)</h2>
                 @if (Model.TableSchemeSimplified != null)
                 {
                     <table class="table">

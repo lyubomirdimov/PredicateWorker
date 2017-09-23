@@ -1,9 +1,11 @@
 ﻿using System.Text.RegularExpressions;
 
-
-namespace Common
+namespace Common.Helpers
 {
-    public static class LogicPropositionHelper
+    /// <summary>
+    /// Static class for validation of Ascii string logical propositions
+    /// </summary>
+    public static class LogicPropositionValidator
     {
         public static Regex PropositionalRegex => new Regex(
 
@@ -23,8 +25,20 @@ namespace Common
                   $"
             , RegexOptions.IgnorePatternWhitespace);
 
-        
 
-      
+        public static bool Validate(string input)
+        {
+            Regex r = PropositionalRegex;
+            return r.Match(input).Success;
+        }
+
+        public static string RemoveWhiteSpaces(this string input)
+        {
+            Regex rgx = new Regex("\\s+");
+            return rgx.Replace(input, "");
+        }
+
+
+
     }
 }
