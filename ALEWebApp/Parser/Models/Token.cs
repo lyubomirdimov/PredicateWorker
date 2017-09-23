@@ -22,6 +22,9 @@
         // Connective - =
         BiImplication,
 
+        // NAND
+        Nand,
+
         // Comma - ,
         Separator,
 
@@ -90,6 +93,10 @@
                         Type = TokenType.BiImplication;
                         IsConnective = true;
                         break;
+                    case '%':
+                        Type = TokenType.Nand;
+                        IsConnective = true;
+                        break;
                     case ',':
                         Type = TokenType.Separator;
                         break;
@@ -118,21 +125,6 @@
             }
         }
 
-        //public void SetAsTrueOrFalse(bool value)
-        //{
-        //    if (value)
-        //    {
-        //        Char = '1';
-        //        Type = TokenType.True;
-        //        IsTrueOrFalse = true;
-        //    }
-        //    else
-        //    {
-        //        Char = '0';
-        //        Type = TokenType.False;
-        //        IsTrueOrFalse = false;
-        //    }
-        //}
 
         public override string ToString() => Char.ToString();
     }

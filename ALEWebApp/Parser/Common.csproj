@@ -43,13 +43,14 @@
     <Compile Include="Helpers\GeneralHelper.cs" />
     <Compile Include="Helpers\HashCodeHelper.cs" />
     <Compile Include="Helpers\LogicPropositionValidator.cs" />
+    <Compile Include="Helpers\NandifingHelper.cs" />
     <Compile Include="Helpers\ParsingHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Node.cs" />
     <Compile Include="Helpers\RandomLogicPropositionGenerator.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Helpers\TreeConstructor.cs" />
-    <Compile Include="TableConstruction\TableConstructionHelper.cs" />
+    <Compile Include="Helpers\TableConstructionHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

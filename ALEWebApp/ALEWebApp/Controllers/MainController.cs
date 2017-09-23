@@ -10,7 +10,6 @@ using ALEWebApp.Models;
 using Common;
 using Common.Helpers;
 using Common.Models;
-using Common.TableConstruction;
 using Microsoft.Ajax.Utilities;
 
 namespace ALEWebApp.Controllers
@@ -47,6 +46,13 @@ namespace ALEWebApp.Controllers
             string binaryValue = string.Empty;
             binaryValue = viewModel.TableScheme.DataRows.Aggregate(binaryValue, (current, row) => current + (row.Result ? "1" : "0"));
             viewModel.TableSchemeHashCode = binaryValue.BinaryStringToHexString();
+
+            // DNF
+            viewModel.DNFTableScheme = TableConstructionHelper.GetDnf(viewModel.TableScheme);
+            viewModel.DNFTableSchemeSimplified = TableConstructionHelper.GetDnf(viewModel.TableSchemeSimplified);
+
+            // Nandify
+            viewModel.Nandified = viewModel.InputProposition.Nandify();
 
             return View("Index", viewModel);
         }

@@ -13,7 +13,7 @@ namespace Common.Helpers
             @"^                                 # Start of line
                   (                             # Either
                       [01A-Z](?![01A-Z])  |     # A predicate
-                      (?<couple>[|&>=]\((?!,))| # Start of couple
+                      (?<couple>[|&>=%]\((?!,))| # Start of couple
                       (?<comma-couple>,(?!\)))| # Looks for comma followed by couple. Pops off the couple stack.
                       (?<dBracket-comma>\))|    # Looks for ending bracket following comma. pops off comma stack. 
                       (?<single>~\((?!\)))|     # Start of single function.

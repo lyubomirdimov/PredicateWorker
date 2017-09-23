@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Common.Helpers;
 using Common.Models;
 
-namespace Common.TableConstruction
+namespace Common.Helpers
 {
     public static class TableConstructionHelper
     {
@@ -24,9 +20,10 @@ namespace Common.TableConstruction
             // Construct header row
             List<Token> predicateTokens = parsedString.Where(x => x.IsPredicate).GroupBy(x => x.Char).Select(x => x.First()).ToList();
             predicateTokens = predicateTokens.OrderBy(x => x.ToString()).ToList();
-            foreach (Token headerToken in predicateTokens)
+            foreach (Token predicate in predicateTokens)
             {
-                tableScheme.TableHeaders.Add(headerToken.ToString());
+                tableScheme.Predicates.Add(predicate.ToString());
+                tableScheme.TableHeaders.Add(predicate.ToString());
             }
             // Add result cell at the end of header row
             tableScheme.TableHeaders.Add("Result");
@@ -171,19 +168,22 @@ namespace Common.TableConstruction
                 switch (tree.Token.Type)
                 {
                     case TokenType.And:
-                        value = booleanResults[0] & booleanResults[1];  // P And Q
+                        value = booleanResults[0] & booleanResults[1];    // P And Q
+                        break;                                            
+                    case TokenType.Or:                                    
+                        value = booleanResults[0] | booleanResults[1];    // P or Q 
+                        break;                                            
+                    case TokenType.Negation:                              
+                        value = !booleanResults[0];                       // Not P
+                        break;                                            
+                    case TokenType.Implication:                           
+                        value = !booleanResults[0] | booleanResults[1];   // not P or Q
+                        break;                                            
+                    case TokenType.BiImplication:                         
+                        value = booleanResults[0] == booleanResults[1];   // P <=> Q
                         break;
-                    case TokenType.Or:
-                        value = booleanResults[0] | booleanResults[1];  // P or Q 
-                        break;
-                    case TokenType.Negation:
-                        value = !booleanResults[0];                     // Not P
-                        break;
-                    case TokenType.Implication:
-                        value = !booleanResults[0] | booleanResults[1]; // not P or Q
-                        break;
-                    case TokenType.BiImplication:
-                        value = booleanResults[0] == booleanResults[1]; // P <=> Q
+                    case TokenType.Nand:
+                        value = !(booleanResults[0] & booleanResults[1]); // Not P And Q
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -203,10 +203,73 @@ namespace Common.TableConstruction
             }
             return value;
         }
+
+        public static string GetDnf(TableScheme tblScheme)
+        {
+            string result = string.Empty;
+            List<DataRow> truthRows = tblScheme.DataRows.Where(x => x.Result).ToList();
+            if (truthRows.Count == 0) return "0";
+
+            List<List<string>> predicateEq = new List<List<string>>();
+            foreach (DataRow truthRow in truthRows)
+            {
+                List<string> transformedPredicates = new List<string>();
+                for (var i = 0; i < truthRow.Values.Count; i++)
+                {
+                    
+                    string predicateValue = truthRow.Values[i];
+                    string predicate = tblScheme.Predicates[i];
+
+                    
+                    switch (predicateValue)
+                    {
+                        case "1":
+                        case "*":
+                            transformedPredicates.Add(predicate);
+                            break;
+                        case "0":
+                            transformedPredicates.Add($"~({predicate})");
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    
+
+                }
+                predicateEq.Add(transformedPredicates);
+
+            }
+            List<string> propositions = new List<string>();
+
+            // Conjunct all predicate evaluations
+            foreach (var listOfPred in predicateEq)
+            {
+                while (listOfPred.Count > 1)
+                {
+                    listOfPred[0] = $"&({listOfPred[0]},{listOfPred[1]})";
+                    listOfPred.RemoveAt(1);
+                }
+                propositions.Add(listOfPred[0]);
+            }
+
+            // Disjunct all combined props
+            while (propositions.Count > 1)
+            {
+                propositions[0] = $"|({propositions[0]},{propositions[1]})";
+                propositions.RemoveAt(1);
+            }
+
+            result = propositions[0];
+
+            
+            return result;
+        }
+        
     }
     public class TableScheme
     {
         public List<string> TableHeaders { get; set; } = new List<string>();
+        public List<string> Predicates { get; set; } = new List<string>();
         public List<DataRow> DataRows { get; set; } = new List<DataRow>();
         public int NrOfDataRows => DataRows.Count;
         public int NrOfPredicates => DataRows.Count == 0 ? 0 : DataRows[0].Values.Count;

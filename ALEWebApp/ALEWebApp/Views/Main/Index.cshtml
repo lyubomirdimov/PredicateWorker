@@ -1,4 +1,5 @@
 ﻿@using System.Collections
+@using System.Web.UI.WebControls
 @using ALEWebApp.Helpers
 @using Common
 @using Common.Models
@@ -42,7 +43,7 @@ foreach (var node in children)
                 <div class="h3">
                     List of Valid Logical propositions. <small> on click the proposition is entered in the text field</small>
                 </div>
-                <hr />
+                <hr/>
                 <div class="list-group">
                     @foreach (var prop in Model.ExampleValidPropositions)
                     {
@@ -52,26 +53,25 @@ foreach (var node in children)
                         </button>
                     }
                 </div>
-                <br />
+                <br/>
                 <button type="button" class="btn btn-primary" id="btnRandomProp">
                     Generate random proposition
                 </button>
             </div>
 
         </div>
-        <hr />
+        <hr/>
         <div class="row">
 
-            <div class="col-6">
-
+            <div class="col-12">
+                <h6><span style="color: red"> Be careful, the Validation <a>DOES NOT ALLOW</a> white spaces, namely you won't be able to construct anything if you don't provide correct proposition</span></h6>
                 <div class="form-group">
-                    @Html.LabelFor(m => m.InputProposition, new { })
-                    @Html.EditorFor(m => m.InputProposition, new { htmlAttributes = new { @class = @Html.ControlClass(), @id = "tbxInputProposition" } })
+                    @Html.EditorFor(m => m.InputProposition, new {htmlAttributes = new {@class = @Html.ControlClass(), @id = "tbxInputProposition",@PlaceHolder = "Logical Propostion"}})
                     @Html.ValidationMessageFor(m => m.InputProposition)
                 </div>
 
             </div>
-            <div class="col-6"></div>
+            
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Construct</button>
             </div>
@@ -82,9 +82,9 @@ foreach (var node in children)
         <div class="row">
             @if (Model.Tree != null)
             {
-                <br />
+                <br/>
                 <div class="col-12 align-content-center">
-                    <hr />
+                    <hr/>
                     <h2> Tree Construct (Assignment 1)</h2>
                     <div class="parent">
                         <div class="tree">
@@ -108,10 +108,10 @@ foreach (var node in children)
 
             @if (Model.TableScheme != null)
             {
-                <br />
+                <br/>
                 <div class="col-12">
 
-                    <hr />
+                    <hr/>
 
                     <h2>Non simplified Truth Table (Assignment 2)</h2>
                     <h3>
@@ -121,31 +121,31 @@ foreach (var node in children)
 
                     <table class="table">
                         <thead class="thead-inverse">
-                            <tr>
-                                @foreach (var tableHeader in Model.TableScheme.TableHeaders)
-                                {
-                                    <th>@tableHeader</th>
-                                }
-                            </tr>
+                        <tr>
+                            @foreach (var tableHeader in Model.TableScheme.TableHeaders)
+                            {
+                                <th>@tableHeader</th>
+                            }
+                        </tr>
                         </thead>
                         <tbody>
-                            @foreach (var tableRow in Model.TableScheme.DataRows)
-                            {
-                                <tr>
-                                    @foreach (var cellValue in tableRow.Values)
-                                    {
-                                        <td>
-                                            @cellValue
-                                        </td>
-                                    }
+                        @foreach (var tableRow in Model.TableScheme.DataRows)
+                        {
+                            <tr>
+                                @foreach (var cellValue in tableRow.Values)
+                                {
                                     <td>
-                                        @{
-                                            string res = tableRow.Result ? "1" : "0";
-                                        }
-                                        @res
+                                        @cellValue
                                     </td>
-                                </tr>
-                                            }
+                                }
+                                <td>
+                                    @{
+                                        string res = tableRow.Result ? "1" : "0";
+                                    }
+                                    @res
+                                </td>
+                            </tr>
+                        }
                         </tbody>
 
                     </table>
@@ -153,55 +153,89 @@ foreach (var node in children)
 
 
                 </div>
-                                            }
+            }
 
 
             @if (Model.TableSchemeSimplified != null)
             {
-                <br />
+                <br/>
                 <div class="col-12">
 
-                    <hr />
+                    <hr/>
                     <h2> Simplified Truth Table (Assignment 3)</h2>
 
                     <table class="table">
                         <thead class="thead-inverse">
-                            <tr>
-                                @foreach (var tableHeader in Model.TableSchemeSimplified.TableHeaders)
-                                {
-                                    <th>@tableHeader</th>
-                                }
-                            </tr>
+                        <tr>
+                            @foreach (var tableHeader in Model.TableSchemeSimplified.TableHeaders)
+                            {
+                                <th>@tableHeader</th>
+                            }
+                        </tr>
                         </thead>
                         <tbody>
-                            @foreach (var tableRow in Model.TableSchemeSimplified.DataRows)
-                            {
-                                <tr>
-                                    @foreach (var cellValue in tableRow.Values)
-                                    {
-                                        <td>
-                                            @cellValue
-                                        </td>
-                                    }
+                        @foreach (var tableRow in Model.TableSchemeSimplified.DataRows)
+                        {
+                            <tr>
+                                @foreach (var cellValue in tableRow.Values)
+                                {
                                     <td>
-                                        @{
-                                            string res = tableRow.Result ? "1" : "0";
-                                        }
-                                        @res
+                                        @cellValue
                                     </td>
-                                </tr>
-                                            }
+                                }
+                                <td>
+                                    @{
+                                        string res = tableRow.Result ? "1" : "0";
+                                    }
+                                    @res
+                                </td>
+                            </tr>
+                        }
                         </tbody>
 
                     </table>
 
 
                 </div>
-                                            }
+            }
+
+            @if (Model.DNFTableScheme != null && Model.DNFTableSchemeSimplified != null)
+            {
+                <br/>
+                <div class="col-12">
+
+                    <hr/>
+                    <h2> DNF (Assignment 4)</h2>
+                    
+                    <h3>
+                        <small>DNF table Scheme: </small><span style="color: coral">@Model.DNFTableScheme</span>
+                    </h3>
+                    
+                    <h3>
+                        <small>DNF table Scheme simplified: </small><span style="color: coral">@Model.DNFTableSchemeSimplified</span>
+                    </h3>
+
+                </div>
+            }
+            
+            @if (Model.Nandified != null)
+            {
+                <br/>
+                <div class="col-12">
+
+                    <hr/>
+                    <h2> Nandify (Assignment 5)</h2>
+                    
+                    <h3>
+                        <small>Nandified Proposition: </small><span style="color: coral">@Model.Nandified</span>
+                    </h3>
+
+                </div>
+            }
+            
+
         </div>
-
-
-                                            }
+    }
 </div>
 
 @section Scripts{
