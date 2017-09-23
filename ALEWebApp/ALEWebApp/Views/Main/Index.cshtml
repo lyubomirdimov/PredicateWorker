@@ -24,7 +24,6 @@ foreach (var node in children)
                     @if (node.Children.Any())
                     {
                         @ShowTree(node.Children)
-
                     }
                 </ul>
             </li>
@@ -32,6 +31,7 @@ foreach (var node in children)
     }
 }
 }
+
 <div class="col-12 p-5 content-wrapper">
     @using (Html.BeginForm("Construct", "Main", FormMethod.Post))
     {
@@ -77,115 +77,131 @@ foreach (var node in children)
             </div>
 
         </div>
-        <div class="row">
-            <div class="col-12 align-content-center">
-                <hr/>
-                <h2> Tree Construct (Assignment 1)</h2>
-                <div class="parent">
-                    <div class="tree">
 
-                        <ul>
-                            <li>
-                                @if (Model?.Tree != null)
-                                {
+
+        <div class="row">
+            @if (Model.Tree != null)
+            {
+                <br />
+                <div class="col-12 align-content-center">
+                    <hr />
+                    <h2> Tree Construct (Assignment 1)</h2>
+                    <div class="parent">
+                        <div class="tree">
+
+                            <ul>
+                                <li>
+
                                     <!-- Root -->
                                     <a href="#">@Model.Tree.Token.ToString()</a>
                                     <ul>
                                         @ShowTree(Model.Tree.Children)
                                     </ul>
-                                }
 
-                            </li>
-                        </ul>
+
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
 
-            <div class="col-12">
+            @if (Model.TableScheme != null)
+            {
+                <br />
+                <div class="col-12">
 
-                <hr />
-                
-                <h2>Non simplified Truth Table (Assignment 2)</h2>
-                <h3><small>Result as Hash code: </small><span style="color: coral">@Model.TableSchemeHashCode</span></h3>
-                @if (Model.TableScheme != null)
-                {
-                    
+                    <hr />
+
+                    <h2>Non simplified Truth Table (Assignment 2)</h2>
+                    <h3>
+                        <small>Result as Hash code: </small><span style="color: coral">@Model.TableSchemeHashCode</span>
+                    </h3>
+
+
                     <table class="table">
                         <thead class="thead-inverse">
-                        <tr>
-                            @foreach (var tableHeader in Model.TableScheme.TableHeaders)
-                            {
-                                <th>@tableHeader</th>
-                            }
-                        </tr>
+                            <tr>
+                                @foreach (var tableHeader in Model.TableScheme.TableHeaders)
+                                {
+                                    <th>@tableHeader</th>
+                                }
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach (var tableRow in Model.TableScheme.DataRows)
-                        {
-                            <tr>
-                                @foreach (var cellValue in tableRow.Values)
-                                {
-                                    <td>                                            
-                                        @cellValue
-                                    </td>
-                                }
-                                <td>
-                                    @{
-                                        string res = tableRow.Result ? "1" : "0";
+                            @foreach (var tableRow in Model.TableScheme.DataRows)
+                            {
+                                <tr>
+                                    @foreach (var cellValue in tableRow.Values)
+                                    {
+                                        <td>
+                                            @cellValue
+                                        </td>
                                     }
-                                    @res
-                                </td>
-                            </tr>
-                        }
+                                    <td>
+                                        @{
+                                            string res = tableRow.Result ? "1" : "0";
+                                        }
+                                        @res
+                                    </td>
+                                </tr>
+                                            }
                         </tbody>
 
                     </table>
-                }
 
 
-            </div>
 
-            <div class="col-12">
+                </div>
+                                            }
 
-                <hr />
-                <h2> Simplified Truth Table (Assignment 3)</h2>
-                @if (Model.TableSchemeSimplified != null)
-                {
+
+            @if (Model.TableSchemeSimplified != null)
+            {
+                <br />
+                <div class="col-12">
+
+                    <hr />
+                    <h2> Simplified Truth Table (Assignment 3)</h2>
+
                     <table class="table">
                         <thead class="thead-inverse">
-                        <tr>
-                            @foreach (var tableHeader in Model.TableSchemeSimplified.TableHeaders)
-                            {
-                                <th>@tableHeader</th>
-                            }
-                        </tr>
+                            <tr>
+                                @foreach (var tableHeader in Model.TableSchemeSimplified.TableHeaders)
+                                {
+                                    <th>@tableHeader</th>
+                                }
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach (var tableRow in Model.TableSchemeSimplified.DataRows)
-                        {
-                            <tr>
-                                @foreach (var cellValue in tableRow.Values)
-                                {
-                                    <td>                                            
-                                        @cellValue
-                                    </td>
-                                }
-                                <td>
-                                    @{
-                                        string res = tableRow.Result ? "1" : "0";
+                            @foreach (var tableRow in Model.TableSchemeSimplified.DataRows)
+                            {
+                                <tr>
+                                    @foreach (var cellValue in tableRow.Values)
+                                    {
+                                        <td>
+                                            @cellValue
+                                        </td>
                                     }
-                                    @res
-                                </td>
-                            </tr>
-                        }
+                                    <td>
+                                        @{
+                                            string res = tableRow.Result ? "1" : "0";
+                                        }
+                                        @res
+                                    </td>
+                                </tr>
+                                            }
                         </tbody>
 
                     </table>
-                }
 
-            </div>
+
+                </div>
+                                            }
         </div>
-}
+
+
+                                            }
 </div>
 
 @section Scripts{

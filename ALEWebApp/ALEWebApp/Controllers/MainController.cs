@@ -36,6 +36,9 @@ namespace ALEWebApp.Controllers
             Node propositionTree = TreeConstructor.ConstructTree(parsedString);
             viewModel.Tree = propositionTree;
 
+            if (parsedString[0].IsTrueOrFalse) return View("Index", viewModel);
+
+            // Table schemes
             viewModel.TableScheme = ConstructTableScheme(parsedString, propositionTree);
             viewModel.TableSchemeSimplified = SimplifyTableScheme(parsedString, propositionTree);
 
@@ -63,7 +66,6 @@ namespace ALEWebApp.Controllers
         /// </summary>
         /// <param name="parsedString">  a list of tokens; the parsed logical proposition</param>
         /// <param name="propositionTree"> the tree constructed from the logical proposition</param>
-        /// <returns></returns>
         private TableScheme ConstructTableScheme(List<Token> parsedString, Node propositionTree)
         {
             // Construct Table
@@ -118,29 +120,40 @@ namespace ALEWebApp.Controllers
             return tableScheme;
         }
 
+
+        /// <summary>
+        /// Table Scheme construction and then simplification
+        /// </summary>
+        /// <param name="parsedString">  a list of tokens; the parsed logical proposition</param>
+        /// <param name="propositionTree"> the tree constructed from the logical proposition</param>
         private TableScheme SimplifyTableScheme(List<Token> parsedString, Node propositionTree)
         {
             TableScheme tblScheme = ConstructTableScheme(parsedString, propositionTree);
             bool completed = false;
 
-
+            // Loop until there is no further simplification
             while (completed == false)
             {
-                completed = true;
-                List<DataRow> simplifiedDataRows = new List<DataRow>();
+                completed = true; // Assume completion (if simplification is applied, completed becomes false)
+                List<DataRow> simplifiedDataRows = new List<DataRow>(); // Collection of newly created simplified Rows
                 int rowCount = 0;
                 List<int> alreadySimplifiedRowsIndeces = new List<int>();
+
                 for (int i = 0; i < tblScheme.NrOfDataRows; i++)
+                // Loop through each row
                 {
                     DataRow currentRow = tblScheme.DataRows[i];
                     bool isRowSimplified = false;
+
                     for (int j = i + 1; j < tblScheme.NrOfDataRows; j++)
+                    // Find possible simplifications, by looping through all rows below the currentRow
                     {
                         DataRow rowToCompare = tblScheme.DataRows[j];
 
                         // If the row have different result, then don't compare
                         if (currentRow.Result != rowToCompare.Result) continue;
 
+                        // Count the number of differences in between the predicate columns
                         List<int> indecesForChange = new List<int>();
                         for (int columnNr = 0; columnNr < tblScheme.NrOfPredicates; columnNr++)
                         {
@@ -153,6 +166,7 @@ namespace ALEWebApp.Controllers
                         // If there are more than one column which differs, then continue iterations
                         if (indecesForChange.Count != 1) continue;
 
+                        // Simplify
                         DataRow newRow = new DataRow
                         {
                             Result = currentRow.Result,
@@ -165,69 +179,22 @@ namespace ALEWebApp.Controllers
                             simplifiedDataRows.Add(newRow);
                         }
 
+                        // Those two rows participated in simplification, hence not visible any further; Store their indexes
                         alreadySimplifiedRowsIndeces.Add(i);
                         alreadySimplifiedRowsIndeces.Add(j);
+
                         isRowSimplified = true;
                         completed = false;
                     }
 
                     if (isRowSimplified == false && alreadySimplifiedRowsIndeces.Contains(i) == false)
+                    // No simplification was done to this row, hence it remains visible
                     {
                         simplifiedDataRows.Add(currentRow);
                     }
                 }
                 tblScheme.DataRows = simplifiedDataRows;
             }
-            //List<DataRow> rowsChanged = new List<DataRow>();
-            //for (var i = 0; i < tblScheme.DataRows.Count; i++)
-            //{
-            //    DataRow row = tblScheme.DataRows[i];
-            //    DataRow newRow = new DataRow
-            //    {
-            //        Result = row.Result,
-            //        RowNum = row.RowNum,
-            //        Values = row.Values.ToList()
-            //    };
-            //    List<DataRow> rowsToCompareWith = tblScheme.DataRows.Where(x => x.Result == row.Result && x.RowNum != row.RowNum).ToList();
-            //    foreach (DataRow rowToCompare in rowsToCompareWith)
-            //    {
-            //        List<int> indecesForChange = new List<int>();
-            //        for (int index = 0; index < row.Values.Count; index++)
-            //        {
-            //            if (row.Values[index] == "*") continue;
-
-            //            if (row.Values[index] != rowToCompare.Values[index])
-            //            {
-            //                indecesForChange.Add(index);
-            //            }
-            //        }
-            //        if (indecesForChange.Count == 1)
-            //        {
-            //            newRow.Values[indecesForChange[0]] = "*";
-            //        }
-            //    }
-            //    rowsChanged.Add(newRow);
-            //}
-            // Check for rows which have same values, then remove one of them
-            //List<DataRow> rowsToBeRemoved = new List<DataRow>();
-            //for (var i = 0; i < rowsChanged.Count; i++)
-            //{
-            //    if (i == rowsChanged.Count - 1) break;
-
-            //    DataRow dataRowUpper = rowsChanged[i];
-            //    for (int j = i + 1; j < rowsChanged.Count; j++)
-            //    {
-            //        DataRow dataRowLower = rowsChanged[j];
-            //        if (dataRowUpper.Values.SequenceEqual(dataRowLower.Values))
-            //        {
-            //            rowsToBeRemoved.Add(dataRowUpper);
-            //        }
-            //    }
-            //}
-            //rowsChanged = rowsChanged.Except(rowsToBeRemoved).ToList();
-            // Assign rownum Again
-            //tblScheme.DataRows = rowsChanged;
-
             return tblScheme;
         }
 
