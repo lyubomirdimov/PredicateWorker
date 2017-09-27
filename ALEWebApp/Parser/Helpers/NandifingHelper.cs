@@ -13,8 +13,17 @@ namespace Common.Helpers
         {
             List<Token> parsedLogProp = logProp.ParseLogicalProposition();
             Node tree = TreeConstructor.ConstructTree(parsedLogProp);
-            
+            // Substitute Implications and BiImplications
+
+            // Recursively Nandify
             return "";
+        }
+
+        private static Node SubstituteImplications(Node tree)
+        {
+            
+            
+            return tree;
         }
     }
 }

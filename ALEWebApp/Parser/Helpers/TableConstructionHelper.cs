@@ -265,6 +265,65 @@ namespace Common.Helpers
             
             return result;
         }
+
+        public static string GetCnf(TableScheme tblScheme)
+        {
+            string result = string.Empty;
+            List<DataRow> falseRows = tblScheme.DataRows.Where(x => x.Result == false).ToList();
+            if (falseRows.Count == 0) return "1";
+
+            List<List<string>> predicateEq = new List<List<string>>();
+            foreach (DataRow falseRow in falseRows)
+            {
+                List<string> transformedPredicates = new List<string>();
+                for (var i = 0; i < falseRow.Values.Count; i++)
+                {
+                    string predicateValue = falseRow.Values[i];
+                    string predicate = tblScheme.Predicates[i];
+
+                    switch (predicateValue)
+                    {
+                        case "1":
+                            transformedPredicates.Add($"~({predicate})");
+                            break;
+                        case "0":
+                            transformedPredicates.Add(predicate);
+                            break;
+                        case "*":
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+
+                }
+                predicateEq.Add(transformedPredicates);
+
+            }
+            List<string> propositions = new List<string>();
+
+            // Disjunct all predicate evaluations
+            foreach (var listOfPred in predicateEq)
+            {
+                while (listOfPred.Count > 1)
+                {
+                    listOfPred[0] = $"|({listOfPred[0]},{listOfPred[1]})";
+                    listOfPred.RemoveAt(1);
+                }
+                propositions.Add(listOfPred[0]);
+            }
+
+            // Conjunct all combined props
+            while (propositions.Count > 1)
+            {
+                propositions[0] = $"&({propositions[0]},{propositions[1]})";
+                propositions.RemoveAt(1);
+            }
+
+            result = propositions[0];
+
+            return result;
+        }
         
     }
     public class TableScheme

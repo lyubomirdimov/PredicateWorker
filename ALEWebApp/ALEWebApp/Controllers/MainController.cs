@@ -52,6 +52,10 @@ namespace ALEWebApp.Controllers
             viewModel.DNFTableScheme = TableConstructionHelper.GetDnf(viewModel.TableScheme);
             viewModel.DNFTableSchemeSimplified = TableConstructionHelper.GetDnf(viewModel.TableSchemeSimplified);
 
+            // CNF
+            viewModel.CNFTableScheme = TableConstructionHelper.GetCnf(viewModel.TableScheme);
+            viewModel.CNFTableSchemeSimplified = TableConstructionHelper.GetCnf(viewModel.TableSchemeSimplified);
+
             // Nandify
             viewModel.Nandified = viewModel.InputProposition.Nandify();
 

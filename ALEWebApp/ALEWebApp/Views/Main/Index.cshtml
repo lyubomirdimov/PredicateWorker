@@ -218,6 +218,25 @@ foreach (var node in children)
                 </div>
             }
             
+            @if (Model.CNFTableScheme != null && Model.CNFTableSchemeSimplified != null)
+            {
+                <br/>
+                <div class="col-12">
+
+                    <hr/>
+                    <h2> CNF (Extra)</h2>
+                    
+                    <h3>
+                        <small>DNF table Scheme: </small><span style="color: coral">@Model.CNFTableScheme</span>
+                    </h3>
+                    
+                    <h3>
+                        <small>DNF table Scheme simplified: </small><span style="color: coral">@Model.CNFTableSchemeSimplified</span>
+                    </h3>
+
+                </div>
+            }
+            
             @if (Model.Nandified != null)
             {
                 <br/>

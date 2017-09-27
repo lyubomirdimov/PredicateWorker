@@ -26,7 +26,8 @@ namespace ALEWebApp.Models
         public string TableSchemeHashCode { get; set; }
         public string DNFTableScheme { get; set; }
         public string DNFTableSchemeSimplified { get; set; }
-
+        public string CNFTableScheme { get; set; }
+        public string CNFTableSchemeSimplified { get; set; }
         public string Nandified { get; set; }
 
         public List<string> ExampleValidPropositions => new List<string>
