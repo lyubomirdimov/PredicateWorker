@@ -45,6 +45,7 @@ namespace ALEWebApp.Controllers
             // Hash code
             string binaryValue = string.Empty;
             binaryValue = viewModel.TableScheme.DataRows.Aggregate(binaryValue, (current, row) => current + (row.Result ? "1" : "0"));
+            binaryValue = GeneralHelper.Reverse(binaryValue);
             viewModel.TableSchemeHashCode = binaryValue.BinaryStringToHexString();
 
             // DNF

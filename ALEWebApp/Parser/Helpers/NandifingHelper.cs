@@ -12,6 +12,8 @@ namespace Common.Helpers
         public static string Nandify(this string logProp)
         {
             List<Token> parsedLogProp = logProp.ParseLogicalProposition();
+            Node tree = TreeConstructor.ConstructTree(parsedLogProp);
+            
             return "";
         }
     }

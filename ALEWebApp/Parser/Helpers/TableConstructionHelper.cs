@@ -224,11 +224,12 @@ namespace Common.Helpers
                     switch (predicateValue)
                     {
                         case "1":
-                        case "*":
                             transformedPredicates.Add(predicate);
                             break;
                         case "0":
                             transformedPredicates.Add($"~({predicate})");
+                            break;
+                        case "*":
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
