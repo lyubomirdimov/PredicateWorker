@@ -208,7 +208,9 @@ namespace Common.Helpers
         {
             string result = string.Empty;
             List<DataRow> truthRows = tblScheme.DataRows.Where(x => x.Result).ToList();
+            List<DataRow> falseRows = tblScheme.DataRows.Where(x => x.Result == false).ToList();
             if (truthRows.Count == 0) return "0";
+            if (falseRows.Count == 0) return "1";
 
             List<List<string>> predicateEq = new List<List<string>>();
             foreach (DataRow truthRow in truthRows)
@@ -269,7 +271,9 @@ namespace Common.Helpers
         public static string GetCnf(TableScheme tblScheme)
         {
             string result = string.Empty;
+            List<DataRow> truthRows = tblScheme.DataRows.Where(x => x.Result).ToList();
             List<DataRow> falseRows = tblScheme.DataRows.Where(x => x.Result == false).ToList();
+            if (truthRows.Count == 0) return "0";
             if (falseRows.Count == 0) return "1";
 
             List<List<string>> predicateEq = new List<List<string>>();
