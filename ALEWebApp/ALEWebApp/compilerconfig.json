@@ -6,5 +6,13 @@
   {
     "outputFile": "Content/sass/pages/structure.css",
     "inputFile": "Content/sass/pages/structure.scss"
+  },
+  {
+    "outputFile": "Content/sass/utility/_typography.css",
+    "inputFile": "Content/sass/utility/_typography.scss"
+  },
+  {
+    "outputFile": "Content/sass/utility/_variables.css",
+    "inputFile": "Content/sass/utility/_variables.scss"
   }
 ]

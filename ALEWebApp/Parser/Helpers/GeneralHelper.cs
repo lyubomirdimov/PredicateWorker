@@ -20,7 +20,7 @@ namespace Common.Helpers
         {
             return (len > 1 ? ToBin(value >> 1, len - 1) : null) + "01"[value & 1];
         }
-        public static string Reverse(string s)
+        public static string Reverse(this string s)
         {
             char[] charArray = s.ToCharArray();
             Array.Reverse(charArray);

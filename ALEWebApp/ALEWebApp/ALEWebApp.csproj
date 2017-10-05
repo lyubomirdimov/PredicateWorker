@@ -141,6 +141,12 @@
     <Content Include="Content\sass\png\car.png" />
     <Content Include="Content\sass\svg\car.svg" />
     <Content Include="Content\sass\svg\carwhite.svg" />
+    <Content Include="Content\sass\utility\_variables.css">
+      <DependentUpon>_variables.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\sass\utility\_variables.min.css">
+      <DependentUpon>_variables.css</DependentUpon>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="ApplicationInsights.config">

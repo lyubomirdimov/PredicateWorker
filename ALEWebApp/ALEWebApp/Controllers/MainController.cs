@@ -39,22 +39,27 @@ namespace ALEWebApp.Controllers
             if (parsedString[0].IsTrueOrFalse) return View("Index", viewModel);
 
             // Table schemes
-            viewModel.TableScheme = TableConstructionHelper.ConstructTableScheme(parsedString, propositionTree);
-            viewModel.TableSchemeSimplified = TableConstructionHelper.SimplifyTableScheme(parsedString, propositionTree);
+            viewModel.TableScheme = TableSchemeUtil.ConstructTableScheme(parsedString);
+            viewModel.TableSchemeSimplified = TableSchemeUtil.SimplifyTableScheme(parsedString);
 
             // Hash code
-            string binaryValue = string.Empty;
-            binaryValue = viewModel.TableScheme.DataRows.Aggregate(binaryValue, (current, row) => current + (row.Result ? "1" : "0"));
-            binaryValue = GeneralHelper.Reverse(binaryValue);
-            viewModel.TableSchemeHashCode = binaryValue.BinaryStringToHexString();
+            viewModel.TableSchemeHashCode = viewModel.TableScheme.TableSchemeToHashCode();
 
             // DNF
-            viewModel.DNFTableScheme = TableConstructionHelper.GetDnf(viewModel.TableScheme);
-            viewModel.DNFTableSchemeSimplified = TableConstructionHelper.GetDnf(viewModel.TableSchemeSimplified);
+            Tuple<string,string> dnfTuple = TableSchemeUtil.GetDnf(viewModel.TableScheme);
+            viewModel.DNFTableScheme = dnfTuple.Item1;
+            viewModel.DNFTableSchemeHashCode = dnfTuple.Item2;
+            Tuple<string, string> dnfSimplifiedTuple = TableSchemeUtil.GetDnf(viewModel.TableSchemeSimplified);
+            viewModel.DNFTableSchemeSimplified = dnfSimplifiedTuple.Item1;
+            viewModel.DNFTableSchemeSimplifiedHashCode = dnfSimplifiedTuple.Item2;
 
             // CNF
-            viewModel.CNFTableScheme = TableConstructionHelper.GetCnf(viewModel.TableScheme);
-            viewModel.CNFTableSchemeSimplified = TableConstructionHelper.GetCnf(viewModel.TableSchemeSimplified);
+            Tuple<string, string> cnfTuple = TableSchemeUtil.GetCnf(viewModel.TableScheme);
+            viewModel.CNFTableScheme = cnfTuple.Item1;
+            viewModel.CNFTableSchemeHashCode = cnfTuple.Item2;
+            Tuple<string, string> cnfSimplifiedTuple = TableSchemeUtil.GetCnf(viewModel.TableSchemeSimplified);
+            viewModel.CNFTableSchemeSimplified = cnfSimplifiedTuple.Item1;
+            viewModel.CNFTableSchemeSimplifiedHashCode = cnfSimplifiedTuple.Item2;
 
             // Nandify
             viewModel.Nandified = viewModel.InputProposition.Nandify();

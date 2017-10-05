@@ -1,0 +1,35 @@
+
+
+Assignment 1 
+	Validate Logical Proposition - Completed
+	Parsing - Completed
+	Tree Structure - Completed 
+	Display Tree Structure - Completed
+	Infix Notation - TODO
+Assignment 2 
+	Define Table Scheme - Completed
+	Hash code - Completed
+Assignment 3
+	Simplification of Table Scheme - Completed
+	Display Simplified Table - Completed 
+Assignment 4
+	Table Scheme to DNF - Completed 
+	Calculate Hash Code - TODO
+	
+Assignment 5
+	Nandify Proposition - TODO
+
+EXTRAS
+	Table Scheme to CNF - Completed
+	Calculate Hash Code - TODO
+	Generate Random Logical Proposition - TODO
+
+Unit Testing
+	High Code Coverage - TODO
+	Test vectors Repository - Completed
+	
+Documentation 
+	Separate Word Document - TODO
+	Commenting of code - 50 % complete
+	
+	

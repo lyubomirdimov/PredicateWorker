@@ -28,6 +28,19 @@ a {
     text-decoration: none;
     color: inherit; }
 
+@media (min-width: 768px) {
+  .dl-horizontal.dl-horizontal-notrunc dt {
+    float: left;
+    width: 160px;
+    overflow: visible;
+    clear: left;
+    text-align: left;
+    text-overflow: clip;
+    white-space: normal; } }
+
+.dl-horizontal dd {
+  margin-bottom: .5em; }
+
 .btn-primary {
   color: #ECF0f1;
   background-color: #EC5854;

@@ -5,16 +5,19 @@ using Common.Models;
 
 namespace Common.Helpers
 {
-    public static class TableConstructionHelper
+    public static class TableSchemeUtil
     {
         /// <summary>
         /// Table Scheme construction from parsed logical proposition and constructed node tree for the proposition
         /// </summary>
         /// <param name="parsedString">  a list of tokens; the parsed logical proposition</param>
         /// <param name="propositionTree"> the tree constructed from the logical proposition</param>
-        public static TableScheme ConstructTableScheme(List<Token> parsedString, Node propositionTree)
+        public static TableScheme ConstructTableScheme(List<Token> parsedString)
         {
-            // Construct Table
+            // Construct Tree
+            Node propositionTree = TreeConstructor.ConstructTree(parsedString);
+
+            // Init Table Scheme
             TableScheme tableScheme = new TableScheme();
 
             // Construct header row
@@ -71,11 +74,10 @@ namespace Common.Helpers
         /// <summary>
         /// Table Scheme construction and then simplification
         /// </summary>
-        /// <param name="parsedString">  a list of tokens; the parsed logical proposition</param>
-        /// <param name="propositionTree"> the tree constructed from the logical proposition</param>
-        public static TableScheme SimplifyTableScheme(List<Token> parsedString, Node propositionTree)
+        /// <param name="parsedString">  a list of tokens; the parsed logical proposition</param>        
+        public static TableScheme SimplifyTableScheme(List<Token> parsedString)
         {
-            TableScheme tblScheme = ConstructTableScheme(parsedString, propositionTree);
+            TableScheme tblScheme = ConstructTableScheme(parsedString);
             bool completed = false;
 
             // Loop until there is no further simplification
@@ -169,17 +171,17 @@ namespace Common.Helpers
                 {
                     case TokenType.And:
                         value = booleanResults[0] & booleanResults[1];    // P And Q
-                        break;                                            
-                    case TokenType.Or:                                    
+                        break;
+                    case TokenType.Or:
                         value = booleanResults[0] | booleanResults[1];    // P or Q 
-                        break;                                            
-                    case TokenType.Negation:                              
+                        break;
+                    case TokenType.Negation:
                         value = !booleanResults[0];                       // Not P
-                        break;                                            
-                    case TokenType.Implication:                           
+                        break;
+                    case TokenType.Implication:
                         value = !booleanResults[0] | booleanResults[1];   // not P or Q
-                        break;                                            
-                    case TokenType.BiImplication:                         
+                        break;
+                    case TokenType.BiImplication:
                         value = booleanResults[0] == booleanResults[1];   // P <=> Q
                         break;
                     case TokenType.Nand:
@@ -204,13 +206,22 @@ namespace Common.Helpers
             return value;
         }
 
-        public static string GetDnf(TableScheme tblScheme)
+
+        /// <summary>
+        /// Convert a table scheme to a DNF expression
+        /// </summary>
+        /// <param name="tblScheme"> Table scheme which is converted to DNF</param>
+        /// <returns> Tuple, with Item1 being the DNF string and Item2 is the Hashcode resulting from the DNF </returns>
+        public static Tuple<string, string> GetDnf(TableScheme tblScheme)
         {
-            string result = string.Empty;
+            Tuple<string, string> result = null;
             List<DataRow> truthRows = tblScheme.DataRows.Where(x => x.Result).ToList();
             List<DataRow> falseRows = tblScheme.DataRows.Where(x => x.Result == false).ToList();
-            if (truthRows.Count == 0) return "0";
-            if (falseRows.Count == 0) return "1";
+
+            // Check for Tautology or Contradiction
+            if (truthRows.Count == 0) return new Tuple<string, string>("0", tblScheme.TableSchemeToHashCode());
+            if (falseRows.Count == 0) return new Tuple<string, string>("1", tblScheme.TableSchemeToHashCode());
+
 
             List<List<string>> predicateEq = new List<List<string>>();
             foreach (DataRow truthRow in truthRows)
@@ -218,11 +229,11 @@ namespace Common.Helpers
                 List<string> transformedPredicates = new List<string>();
                 for (var i = 0; i < truthRow.Values.Count; i++)
                 {
-                    
+
                     string predicateValue = truthRow.Values[i];
                     string predicate = tblScheme.Predicates[i];
 
-                    
+
                     switch (predicateValue)
                     {
                         case "1":
@@ -236,7 +247,7 @@ namespace Common.Helpers
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                    
+
 
                 }
                 predicateEq.Add(transformedPredicates);
@@ -262,19 +273,34 @@ namespace Common.Helpers
                 propositions.RemoveAt(1);
             }
 
-            result = propositions[0];
+            string dnfExpression = propositions[0];
 
-            
+            // Get Hashcode for the created DNF expression
+            List<Token> parsedString = dnfExpression.ParseLogicalProposition();
+            TableScheme tableScheme = ConstructTableScheme(parsedString);
+            string dnfHashCode = tableScheme.TableSchemeToHashCode();
+
+            result = new Tuple<string, string>(dnfExpression, dnfHashCode);
+
             return result;
         }
 
-        public static string GetCnf(TableScheme tblScheme)
+
+
+        /// <summary>
+        /// Convert a table scheme to a CNF expression
+        /// </summary>
+        /// <param name="tblScheme"> Table scheme which is converted to CNF</param>
+        /// <returns> Tuple, with Item1 being the CNF expression as a string and Item2 is the Hashcode resulting from the CNF </returns>
+        public static Tuple<string, string> GetCnf(TableScheme tblScheme)
         {
-            string result = string.Empty;
+            Tuple<string, string> result = null;
             List<DataRow> truthRows = tblScheme.DataRows.Where(x => x.Result).ToList();
             List<DataRow> falseRows = tblScheme.DataRows.Where(x => x.Result == false).ToList();
-            if (truthRows.Count == 0) return "0";
-            if (falseRows.Count == 0) return "1";
+
+            // Check for Tautology or Contradiction
+            if (truthRows.Count == 0) return new Tuple<string, string>("0", tblScheme.TableSchemeToHashCode());
+            if (falseRows.Count == 0) return new Tuple<string, string>("1", tblScheme.TableSchemeToHashCode());
 
             List<List<string>> predicateEq = new List<List<string>>();
             foreach (DataRow falseRow in falseRows)
@@ -324,11 +350,18 @@ namespace Common.Helpers
                 propositions.RemoveAt(1);
             }
 
-            result = propositions[0];
+            string cnfExp = propositions[0];
+
+            // Get Hashcode for the created DNF expression
+            List<Token> parsedString = cnfExp.ParseLogicalProposition();
+            TableScheme tableScheme = ConstructTableScheme(parsedString);
+            string cnfHashCode = tableScheme.TableSchemeToHashCode();
+
+            result = new Tuple<string, string>(cnfExp, cnfHashCode);
 
             return result;
         }
-        
+
     }
     public class TableScheme
     {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Common.Helpers
@@ -23,6 +25,16 @@ namespace Common.Helpers
             }
 
             return result.ToString();
+        }
+
+        public static string TableSchemeToHashCode(this TableScheme tblScheme)
+        {
+
+            string binaryValue = string.Empty;
+            binaryValue = tblScheme.DataRows.Aggregate(binaryValue, (current, row) => current + (row.Result ? "1" : "0"));
+            binaryValue = binaryValue.Reverse();
+            
+            return binaryValue.BinaryStringToHexString();
         }
     }
 }
