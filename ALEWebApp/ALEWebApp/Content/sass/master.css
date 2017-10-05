@@ -217,7 +217,7 @@ body {
 
 main {
   position: relative;
-  padding-left: 240px;
+  /*padding-left: $menu-width-desktop;*/
   background: #ECF0f1;
   color: #424242; }
 
