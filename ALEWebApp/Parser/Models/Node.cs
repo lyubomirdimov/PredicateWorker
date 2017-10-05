@@ -66,7 +66,34 @@ namespace Common.Models
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
 
+        public string ToPrefixNotation()
+        {
+            switch (Token.Type)
+            {
+                case TokenType.And:
+                case TokenType.Or:
+                case TokenType.Implication:
+                case TokenType.BiImplication:
+                case TokenType.Nand:
+                    StringBuilder str = new StringBuilder();
+                    str.Append($"{Token}");
+                    str.Append("(");
+                    str.Append(Children[0].ToPrefixNotation());
+                    str.Append(",");
+                    str.Append(Children[1].ToPrefixNotation());
+                    str.Append(")");
+                    return str.ToString();
+                case TokenType.Negation:
+                    return $"{Token}({Children[0].ToPrefixNotation()})";
+                case TokenType.Predicate:
+                case TokenType.True:
+                case TokenType.False:
+                    return Token.ToString();
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

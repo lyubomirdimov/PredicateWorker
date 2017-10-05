@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Common.Models;
 
 namespace Common.Helpers
@@ -56,6 +57,21 @@ namespace Common.Helpers
                 }
             }
             return parentNode;
+        }
+
+        public static Node ConstructRandomTree()
+        {
+            Node root = new Node(new Guid(),RandomToken() );
+
+        }
+
+        private static Token RandomToken()
+        {
+            List<char> chars = "PQRS~&|>=%".ToList();
+            Random rnd = new Random();
+            int r = rnd.Next(chars.Count);
+            return new Token(chars[r]);
+
         }
 
     }

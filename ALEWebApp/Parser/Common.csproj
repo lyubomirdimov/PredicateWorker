@@ -47,7 +47,6 @@
     <Compile Include="Helpers\ParsingHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Node.cs" />
-    <Compile Include="Helpers\RandomLogicPropositionGenerator.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Helpers\TreeConstructor.cs" />
     <Compile Include="Helpers\TableSchemeUtil.cs" />
