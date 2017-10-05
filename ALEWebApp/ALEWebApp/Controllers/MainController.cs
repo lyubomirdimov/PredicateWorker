@@ -36,6 +36,9 @@ namespace ALEWebApp.Controllers
             Node propositionTree = TreeConstructor.ConstructTree(parsedString);
             viewModel.Tree = propositionTree;
 
+            // Infix notation
+            viewModel.InfixNotation = propositionTree.ToInfixNotation();
+
             if (parsedString[0].IsTrueOrFalse) return View("Index", viewModel);
 
             // Table schemes

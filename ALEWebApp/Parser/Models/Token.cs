@@ -1,4 +1,6 @@
-﻿namespace Common.Models
+﻿using System;
+
+namespace Common.Models
 {
 
     /// <summary>
@@ -127,5 +129,36 @@
 
 
         public override string ToString() => Char.ToString();
+
+        public string ToInfixString()
+        {
+            switch (Type)
+            {
+                case TokenType.And:
+                    return "∧";
+                case TokenType.Or:
+                    return "∨";
+                case TokenType.Negation:
+                    return "¬";
+                case TokenType.Implication:
+                    return "⇒";
+                case TokenType.BiImplication:
+                    return "⇔";
+                case TokenType.Nand:
+                    return "⊼";
+                case TokenType.Predicate:
+                    return Char.ToString();
+                case TokenType.True:
+                    return "True";
+                case TokenType.False:
+                    return "False";
+                case TokenType.Separator:
+                case TokenType.OpeningParanthesis:
+                case TokenType.ClosingParanthesis:
+                    return "";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }

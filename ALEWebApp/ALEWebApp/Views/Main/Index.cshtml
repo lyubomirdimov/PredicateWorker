@@ -53,9 +53,7 @@ foreach (var node in children)
                     }
                 </div>
                 <br />
-                <button type="button" class="btn btn-primary" id="btnRandomProp">
-                    Generate random proposition
-                </button>
+               
             </div>
             <div class="col-6">
                 <div class="h3">
@@ -66,7 +64,7 @@ foreach (var node in children)
                     <table class="table">
                         <tr>
                             <th>
-                                Table Scheme HC
+                                HC
                             </th>
                             <td>
                                 @Model.TableSchemeHashCode
@@ -82,27 +80,32 @@ foreach (var node in children)
                             <th>CNF HC</th>
                             <td>@Model.CNFTableSchemeHashCode</td>
                         </tr>
+                        <tr>
+                            <th>Infix Notation</th>
+                            <td>@Model.InfixNotation</td>
+                        </tr>
                        
                     </table>
                 </div>
+                <button type="button" class="btn btn-info float-right" id="btnRandomProp">
+                    Generate random proposition
+                </button>
             </div>
 
         </div>
-        <hr />
         <div class="row">
 
             <div class="col-12">
-                <h6><span style="color: red"> Be careful, the Validation <a>DOES NOT ALLOW</a> white spaces, namely you won't be able to construct anything if you don't provide correct proposition</span></h6>
+                
                 <div class="form-group">
-                    @Html.EditorFor(m => m.InputProposition, new { htmlAttributes = new { @class = @Html.ControlClass(), @id = "tbxInputProposition", @PlaceHolder = "Logical Propostion" } })
+                    @Html.EditorFor(m => m.InputProposition, new {htmlAttributes = new {@class = @Html.ControlClass(), @id = "tbxInputProposition", @PlaceHolder = "Logical Propostion"}})
                     @Html.ValidationMessageFor(m => m.InputProposition)
                 </div>
-
+                <button type="submit" class="btn btn-lg btn-primary float-right">Construct</button>
             </div>
 
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Construct</button>
-            </div>
+            
+         
 
         </div>
 

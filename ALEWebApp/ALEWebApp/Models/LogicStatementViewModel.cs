@@ -20,7 +20,7 @@ namespace ALEWebApp.Models
         public string InputProposition { get; set; }
 
         public Node Tree { get; set; }
-
+        public string InfixNotation { get; set; }
         public TableScheme TableScheme { get; set; }
         public TableScheme TableSchemeSimplified { get; set; }
         public string TableSchemeHashCode { get; set; }
@@ -35,9 +35,9 @@ namespace ALEWebApp.Models
         public List<string> ExampleValidPropositions => new List<string>
         {
             "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))",
-            "&(=(A,B),>(&(A,B),~(C)))",
-            "C",
-            ">(~(>(A,B)),C)",
+            //"&(=(A,B),>(&(A,B),~(C)))",
+            //"C",
+            //">(~(>(A,B)),C)",
             "|(|(P,Q),&(~(P),~(Q)))",
             "&(|(P,Q),&(~(P),~(Q)))",
             "%(P,Q)",
