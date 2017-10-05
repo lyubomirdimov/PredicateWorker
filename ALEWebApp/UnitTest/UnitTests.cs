@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Common;
 using Common.Helpers;
+using Common.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTest
@@ -74,7 +75,19 @@ namespace UnitTest
             }
         }
 
-       
 
+        [TestMethod]
+        public void TestRandomVectors()
+        {
+            Regex r = LogicPropositionValidator.PropositionalRegex;
+            for (int i = 0; i < 1000; i++)
+            {
+                Node tree = TreeConstructor.ConstructRandomTree();
+                string prefixTree = tree.ToPrefixNotation();
+                Assert.IsTrue(r.Match(prefixTree).Success);
+            }
+            
+            
+        }
     }
 }

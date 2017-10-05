@@ -82,8 +82,9 @@ namespace ALEWebApp.Controllers
 
         public ActionResult GenerateRandomProposition()
         {
-            // TODO: Random props
-            return Json("Success");
+            Node tree = TreeConstructor.ConstructRandomTree();
+            string prefixTree = tree.ToPrefixNotation();
+            return Json(prefixTree,JsonRequestBehavior.AllowGet);
         }
     }
 

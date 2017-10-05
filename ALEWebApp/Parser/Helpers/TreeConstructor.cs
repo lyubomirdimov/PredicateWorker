@@ -59,19 +59,63 @@ namespace Common.Helpers
             return parentNode;
         }
 
+
+
         public static Node ConstructRandomTree()
         {
-            Node root = new Node(new Guid(),RandomToken() );
+            int maxLevel = GenerateRandomNumber(100);
+            int counter = 0;
+            Node tree = RecurConstRndTree(ref counter, maxLevel);
+            return tree;
+        }
+        private static Node RecurConstRndTree(ref int counter, int max)
+        {
+            if (counter == max)
+            {
+                List<char> chars = "10PQRXS".ToList();
+                int r = GenerateRandomNumber(chars.Count);
+                return new Node(Guid.NewGuid(), new Token(chars[r]));
+            }
+            counter++;
+            Node node = new Node(Guid.NewGuid(), RandomToken());
 
+            if (node.Token.IsConnective)
+            {
+                if (node.Token.IsNegation)
+                {
+                    node.Add(RecurConstRndTree(ref counter,max));
+                }
+                else
+                {
+                    node.Add(RecurConstRndTree(ref counter, max));
+                    node.Add(RecurConstRndTree(ref counter, max));
+                }
+            }
+            if (node.Token.IsPredicate || node.Token.IsTrueOrFalse)
+            {
+                return node;
+            }
+            return node;
         }
 
         private static Token RandomToken()
         {
-            List<char> chars = "PQRS~&|>=%".ToList();
-            Random rnd = new Random();
-            int r = rnd.Next(chars.Count);
+            List<char> chars = "~&|>=%10PQRXS~&|>=%".ToList();
+            int r = GenerateRandomNumber(chars.Count);
             return new Token(chars[r]);
+        }
 
+
+        private static Random random;
+        private static object syncObj = new object();
+        private static int GenerateRandomNumber(int max)
+        {
+            lock (syncObj)
+            {
+                if (random == null)
+                    random = new Random(); // Or exception...
+                return random.Next(max);
+            }
         }
 
     }

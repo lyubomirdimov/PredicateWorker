@@ -11,7 +11,7 @@
 
 foreach (var node in children)
 {
-    if (node.Token.IsPredicate)
+    if (node.Token.IsPredicate || node.Token.IsTrueOrFalse)
     {
             <li>
                 <a href="#">@node.Token.ToString()</a>
@@ -53,7 +53,7 @@ foreach (var node in children)
                     }
                 </div>
                 <br />
-               
+
             </div>
             <div class="col-6">
                 <div class="h3">
@@ -75,7 +75,7 @@ foreach (var node in children)
                             <th>DNF HC</th>
                             <td>@Model.DNFTableSchemeHashCode</td>
                         </tr>
-                      
+
                         <tr>
                             <th>CNF HC</th>
                             <td>@Model.CNFTableSchemeHashCode</td>
@@ -84,7 +84,7 @@ foreach (var node in children)
                             <th>Infix Notation</th>
                             <td>@Model.InfixNotation</td>
                         </tr>
-                       
+
                     </table>
                 </div>
                 <button type="button" class="btn btn-info float-right" id="btnRandomProp">
@@ -96,16 +96,16 @@ foreach (var node in children)
         <div class="row">
 
             <div class="col-12">
-                
+
                 <div class="form-group">
-                    @Html.EditorFor(m => m.InputProposition, new {htmlAttributes = new {@class = @Html.ControlClass(), @id = "tbxInputProposition", @PlaceHolder = "Logical Propostion"}})
+                    @Html.EditorFor(m => m.InputProposition, new { htmlAttributes = new { @class = @Html.ControlClass(), @id = "tbxInputProposition", @PlaceHolder = "Logical Propostion" } })
                     @Html.ValidationMessageFor(m => m.InputProposition)
                 </div>
                 <button type="submit" class="btn btn-lg btn-primary float-right">Construct</button>
             </div>
 
-            
-         
+
+
 
         </div>
 
@@ -290,4 +290,12 @@ foreach (var node in children)
 
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryValidation")
+
+    <script>
+        $(function() {
+            $("#btnRandomProp").click(function() {
+                GenerateRandomVector('@Url.Action("GenerateRandomProposition", "Main")');
+            });
+        });
+    </script>
 }
