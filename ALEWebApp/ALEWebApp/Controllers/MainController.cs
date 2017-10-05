@@ -51,7 +51,6 @@ namespace ALEWebApp.Controllers
             viewModel.DNFTableSchemeHashCode = dnfTuple.Item2;
             Tuple<string, string> dnfSimplifiedTuple = TableSchemeUtil.GetDnf(viewModel.TableSchemeSimplified);
             viewModel.DNFTableSchemeSimplified = dnfSimplifiedTuple.Item1;
-            viewModel.DNFTableSchemeSimplifiedHashCode = dnfSimplifiedTuple.Item2;
 
             // CNF
             Tuple<string, string> cnfTuple = TableSchemeUtil.GetCnf(viewModel.TableScheme);
@@ -59,7 +58,6 @@ namespace ALEWebApp.Controllers
             viewModel.CNFTableSchemeHashCode = cnfTuple.Item2;
             Tuple<string, string> cnfSimplifiedTuple = TableSchemeUtil.GetCnf(viewModel.TableSchemeSimplified);
             viewModel.CNFTableSchemeSimplified = cnfSimplifiedTuple.Item1;
-            viewModel.CNFTableSchemeSimplifiedHashCode = cnfSimplifiedTuple.Item2;
 
             // Nandify
             viewModel.Nandified = viewModel.InputProposition.Nandify();
