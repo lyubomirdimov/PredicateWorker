@@ -22,6 +22,8 @@ namespace Common.Helpers
 
             // Construct header row
             List<Token> predicateTokens = parsedString.Where(x => x.IsPredicate).GroupBy(x => x.Char).Select(x => x.First()).ToList();
+            if (predicateTokens.Count == 0) return tableScheme;
+
             predicateTokens = predicateTokens.OrderBy(x => x.ToString()).ToList();
             foreach (Token predicate in predicateTokens)
             {

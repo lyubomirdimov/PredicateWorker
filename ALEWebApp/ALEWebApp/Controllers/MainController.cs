@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using ALEWebApp.Helpers;
 using ALEWebApp.Models;
 using Common;
 using Common.Helpers;
@@ -63,8 +64,19 @@ namespace ALEWebApp.Controllers
             viewModel.CNFTableSchemeSimplified = cnfSimplifiedTuple.Item1;
 
             // Nandify
-            viewModel.Nandified = viewModel.InputProposition.Nandify();
-
+            try
+            {
+                viewModel.Nandified = viewModel.Tree.Nandify();
+                List<Token> nandTokens = viewModel.Nandified.ParseLogicalProposition();
+                TableScheme nandTblScheme = TableSchemeUtil.ConstructTableScheme(nandTokens);
+                viewModel.NANDTableSchemeHashCode = nandTblScheme.TableSchemeToHashCode();
+            }
+            catch (OutOfMemoryException ex)
+            {
+                viewModel.Nandified = "out of memory";
+                viewModel.NANDTableSchemeHashCode = "out of memory";
+                this.SetHeaderMessage(MessageType.Failure,"out of memory");
+            }
             return View("Index", viewModel);
         }
       

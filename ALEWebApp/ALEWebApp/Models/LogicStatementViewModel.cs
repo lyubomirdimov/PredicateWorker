@@ -31,6 +31,7 @@ namespace ALEWebApp.Models
         public string CNFTableSchemeHashCode { get; set; }
         public string CNFTableSchemeSimplified { get; set; }
         public string Nandified { get; set; }
+        public string NANDTableSchemeHashCode { get; set; }
 
         public List<string> ExampleValidPropositions => new List<string>
         {

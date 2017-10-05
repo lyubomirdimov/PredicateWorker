@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Common.Helpers;
 
 namespace Common.Models
 {
@@ -94,6 +95,72 @@ namespace Common.Models
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+
+
+        public string Nandify()
+        {
+            try
+            {
+                string result;
+                Node A = null;
+                Node B = null;
+                switch (Token.Type)
+                {
+                    case TokenType.And:
+                        A = Children[0];
+                        B = Children[1];
+                        result = $"%(%({A.Nandify()},{B.Nandify()}),%({A.Nandify()},{B.Nandify()}))"; // ( A ⊼ B ) ⊼ ( A ⊼ B )
+                        break;
+                    case TokenType.Or:
+                        A = Children[0];
+                        B = Children[1];
+                        result = $"%(%({A.Nandify()},{A.Nandify()}),%({B.Nandify()},{B.Nandify()}))"; //( A ⊼ A ) ⊼ ( B ⊼ B )
+                        break;
+                    case TokenType.Negation:
+                        A = Children[0];
+                        result = $"%({A.Nandify()},{A.Nandify()})"; // A ⊼ A
+                        break;
+                    case TokenType.Implication:
+                        A = Children[0];
+                        B = Children[1];
+                        result = $"%({A.Nandify()},%({B.Nandify()},{B.Nandify()}))";
+                        break;
+                    case TokenType.BiImplication:
+                        A = Children[0];
+                        B = Children[1];
+                        result = $"%(" +
+                                 $"%(%(%({A.Nandify()},{B.Nandify()}),%({A.Nandify()},{B.Nandify()})),%(%({A.Nandify()},{B.Nandify()}),%({A.Nandify()},{B.Nandify()})))" +
+                                 $"," +
+                                 $"%(" +
+                                 $"%(%(%({A.Nandify()},{A.Nandify()}),%({B.Nandify()},{B.Nandify()})),%(%({A.Nandify()},{A.Nandify()}),%({B.Nandify()},{B.Nandify()})))" +
+                                 $"," +
+                                 $"%(%(%({A.Nandify()},{A.Nandify()}),%({B.Nandify()},{B.Nandify()})),%(%({A.Nandify()},{A.Nandify()}),%({B.Nandify()},{B.Nandify()})))" +
+                                 $"))";
+                        // (((A⊼A)⊼(B⊼B))⊼((A⊼A)⊼(B⊼B)))*(((A⊼A)⊼(B⊼B))
+                        // ⊼
+                        // ((A⊼A)⊼(B⊼B)))⊼(((A⊼B)⊼(A⊼B))*((A⊼B)⊼(A⊼B)))
+                        break;
+                    case TokenType.Nand:
+                        A = Children[0];
+                        B = Children[1];
+                        result = $"%({A.Nandify()},{B.Nandify()})";
+                        break;
+                    case TokenType.Predicate:
+                    case TokenType.True:
+                    case TokenType.False:
+                        return Token.ToString();
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                return result;
+            }
+            catch (OutOfMemoryException ex)
+            {
+                throw;
+            }
+
         }
     }
 }
