@@ -16,7 +16,7 @@ namespace ConsoleAppTest
         static void Main(string[] args)
         {
             
-
+            // This app is not relevant to the assignment it is just for testing
             
             Console.ReadLine();
 

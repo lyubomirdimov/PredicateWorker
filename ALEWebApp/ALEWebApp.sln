@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Parser\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{C61C4ACD-6E5C-4A15-AACC-0E811BEF8C5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppTest", "ConsoleAppTest\ConsoleAppTest.csproj", "{4EA198AA-F3DB-4D84-833E-1B61C11B879C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CB7D7370-B2B7-46F0-94C3-7C74C61397FD}"
 	ProjectSection(SolutionItems) = preProject
 		ProjectTracking.txt = ProjectTracking.txt
@@ -34,10 +32,6 @@ Global
 		{C61C4ACD-6E5C-4A15-AACC-0E811BEF8C5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C61C4ACD-6E5C-4A15-AACC-0E811BEF8C5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C61C4ACD-6E5C-4A15-AACC-0E811BEF8C5B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4EA198AA-F3DB-4D84-833E-1B61C11B879C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4EA198AA-F3DB-4D84-833E-1B61C11B879C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4EA198AA-F3DB-4D84-833E-1B61C11B879C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4EA198AA-F3DB-4D84-833E-1B61C11B879C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

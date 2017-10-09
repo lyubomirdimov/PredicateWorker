@@ -29,7 +29,6 @@ namespace Common.Helpers
 
         public static string TableSchemeToHashCode(this TableScheme tblScheme)
         {
-
             string binaryValue = string.Empty;
             binaryValue = tblScheme.DataRows.Aggregate(binaryValue, (current, row) => current + (row.Result ? "1" : "0"));
             binaryValue = binaryValue.Reverse();
