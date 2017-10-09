@@ -12,6 +12,7 @@ using Common;
 using Common.Helpers;
 using Common.Models;
 using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json;
 
 namespace ALEWebApp.Controllers
 {
@@ -77,6 +78,7 @@ namespace ALEWebApp.Controllers
                 viewModel.NANDTableSchemeHashCode = "out of memory";
                 this.SetHeaderMessage(MessageType.Failure,"out of memory");
             }
+            
             return View("Index", viewModel);
         }
       

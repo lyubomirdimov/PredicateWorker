@@ -36,9 +36,6 @@ namespace ALEWebApp.Models
         public List<string> ExampleValidPropositions => new List<string>
         {
             "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))",
-            //"&(=(A,B),>(&(A,B),~(C)))",
-            //"C",
-            //">(~(>(A,B)),C)",
             "|(|(P,Q),&(~(P),~(Q)))",
             "&(|(P,Q),&(~(P),~(Q)))",
             "%(P,Q)",

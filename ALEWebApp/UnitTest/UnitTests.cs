@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using Common;
@@ -15,6 +16,11 @@ namespace UnitTest
     {
         public TableScheme TestTableScheme { get; set; }
         public string TestProposition { get; set; }
+        public List<string> ValidTestVectors { get; set; }
+        public List<string> InvalidTestVectors { get; set; }
+        public Dictionary<string, string> BinToHCVectors { get; set; }
+        public Dictionary<string, string> PropositionToHashCodeVectors { get; set; }
+
         public UnitTests()
         {
             Init();
@@ -22,10 +28,15 @@ namespace UnitTest
 
         private void Init()
         {
+            // Some hardcoded test data
             TestProposition = "&(&(=(A,B),>(&(A,B),~(C))),>(A,~(&(A,B))))";
 
-            TestTableScheme = new TableScheme();
-            TestTableScheme.TableHeaders = new List<string> { "A", "B", "C" };
+            TestTableScheme = new TableScheme
+            {
+                TableHeaders = new List<string> { "A", "B", "C", "Result" },
+                Predicates = new List<string> { "A", "B", "C" }
+            };
+
             TestTableScheme.DataRows.Add(new DataRow
             {
                 Result = true,
@@ -74,6 +85,23 @@ namespace UnitTest
                 RowNum = 7,
                 Values = new List<string> { "1", "1", "1" }
             });
+            using (WebClient wc = new WebClient())
+            {
+                string json = wc.DownloadString("https://raw.githubusercontent.com/lyubomirdimov/AleProps/master/ValidPropositions.json");
+                ValidTestVectors = JsonConvert.DeserializeObject<List<string>>(json);
+
+                json = wc.DownloadString("https://raw.githubusercontent.com/lyubomirdimov/AleProps/master/InvalidPropositions.json");
+                InvalidTestVectors = JsonConvert.DeserializeObject<List<string>>(json);
+
+                json = wc.DownloadString("https://raw.githubusercontent.com/lyubomirdimov/AleProps/master/BinToHashcode.json");
+                BinToHCVectors = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+
+                json = wc.DownloadString("https://raw.githubusercontent.com/lyubomirdimov/AleProps/master/PropositionToHashcode.json");
+                PropositionToHashCodeVectors = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+
+                
+            }
+
         }
 
 
@@ -89,28 +117,16 @@ namespace UnitTest
         [TestMethod]
         public void CheckValidLogicalProposition()
         {
-            Regex r = LogicPropositionValidator.PropositionalRegex;
 
-            List<string> validPropostions;
-            List<string> invalidPropositions;
 
-            using (WebClient wc = new WebClient())
+            foreach (var validPropostion in ValidTestVectors)
             {
-                string json = wc.DownloadString("https://raw.githubusercontent.com/lyubomirdimov/AleProps/master/ValidProps.json");
-                validPropostions = JsonConvert.DeserializeObject<List<string>>(json);
-
-                json = wc.DownloadString("https://raw.githubusercontent.com/lyubomirdimov/AleProps/master/Invalid%20Propositions.json");
-                invalidPropositions = JsonConvert.DeserializeObject<List<string>>(json);
+                Assert.IsTrue(LogicPropositionValidator.Validate(validPropostion));
             }
 
-            foreach (var validPropostion in validPropostions)
+            foreach (var invalidProposition in InvalidTestVectors)
             {
-                Assert.IsTrue(r.Match(validPropostion).Success);
-            }
-
-            foreach (var invalidProposition in invalidPropositions)
-            {
-                Assert.IsFalse(r.Match(invalidProposition).Success);
+                Assert.IsFalse(LogicPropositionValidator.Validate(invalidProposition));
             }
         }
 
@@ -118,13 +134,13 @@ namespace UnitTest
         [TestMethod]
         public void TestRandomVectors()
         {
-            Regex r = LogicPropositionValidator.PropositionalRegex;
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 Node tree = TreeConstructor.ConstructRandomTree();
                 string prefixTree = tree.ToPrefixNotation();
-                Assert.IsTrue(r.Match(prefixTree).Success);
+                Assert.IsTrue(LogicPropositionValidator.Validate(prefixTree));
             }
+
         }
 
         [TestMethod]
@@ -167,21 +183,154 @@ namespace UnitTest
         [TestMethod]
         public void TestBinaryStringToHexString()
         {
-            Dictionary<string, string> testVectors;
-            using (WebClient wc = new WebClient())
-            {
-                string json = wc.DownloadString("https://raw.githubusercontent.com/lyubomirdimov/AleProps/master/ValidHashCodeVectors.json");
-                testVectors = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-            }
-
-            foreach (var keyValuePair in testVectors)
+            foreach (var keyValuePair in BinToHCVectors)
             {
                 string hexString = keyValuePair.Key.BinaryStringToHexString();
                 Assert.AreEqual(keyValuePair.Value, hexString);
             }
         }
 
-        
+        [TestMethod]
+        public void TestTreeConstruction()
+        {
+            foreach (var testVector in ValidTestVectors)
+            {
+                List<Token> proposition = testVector.ParseLogicalProposition();
+                Node tree = TreeConstructor.ConstructTree(proposition);
+                string treeToProposition = tree.ToPrefixNotation();
 
+                Assert.AreEqual(testVector, treeToProposition);
+            }
+        }
+
+        [TestMethod]
+        public void TestTableSchemeConstruction()
+        {
+            // Parse
+            List<Token> logicalProposition = TestProposition.ParseLogicalProposition();
+
+            // Construct Table Scheme
+            TableScheme scheme = TableSchemeUtil.ConstructTableScheme(logicalProposition);
+
+            // Compare
+            CollectionAssert.AreEqual(scheme.TableHeaders, TestTableScheme.TableHeaders);
+            CollectionAssert.AreEqual(scheme.Predicates, TestTableScheme.Predicates);
+            CollectionAssert.AreEqual(scheme.DataRows[0].Values, TestTableScheme.DataRows[0].Values);
+            Assert.AreEqual(scheme.NrOfDataRows, TestTableScheme.NrOfDataRows);
+            Assert.AreEqual(scheme.DataRows[0].Result, TestTableScheme.DataRows[0].Result);
+            CollectionAssert.AreEqual(scheme.DataRows.Last().Values, TestTableScheme.DataRows.Last().Values);
+            Assert.AreEqual(scheme.DataRows.Last().Result, TestTableScheme.DataRows.Last().Result);
+
+        }
+
+        [TestMethod]
+        public void TestTableSchemeToHashCode()
+        {
+            foreach (var keyValuePair in PropositionToHashCodeVectors)
+            {
+                // Construct Table
+                TableScheme tableScheme = TableSchemeUtil.ConstructTableScheme(keyValuePair.Key.ParseLogicalProposition());
+                string hashCode = tableScheme.TableSchemeToHashCode();
+
+                Assert.AreEqual(keyValuePair.Value, hashCode);
+            }
+        }
+
+        [TestMethod]
+        public void TestSimplification()
+        {
+
+            foreach (var testVector in ValidTestVectors)
+            {
+                List<Token> proposition = testVector.ParseLogicalProposition();
+                TableScheme scheme = TableSchemeUtil.ConstructTableScheme(proposition);
+                string tshashCode = scheme.TableSchemeToHashCode();
+
+                // Simplify
+                TableScheme simplifyTableScheme = TableSchemeUtil.SimplifyTableScheme(proposition);
+                // Get DNF and CNF of simplified
+                //Tuple<string, string> cnf = TableSchemeUtil.GetCnf(simplifyTableScheme);
+                Tuple<string, string> dnf = TableSchemeUtil.GetDnf(simplifyTableScheme);
+
+                //Assert.AreEqual(tshashCode,cnf.Item2);
+                Assert.AreEqual(tshashCode, dnf.Item2);
+
+            }
+        }
+
+        [TestMethod]
+        public void TestDNF()
+        {
+            foreach (var testVector in ValidTestVectors)
+            {
+                List<Token> proposition = testVector.ParseLogicalProposition();
+                TableScheme scheme = TableSchemeUtil.ConstructTableScheme(proposition);
+                string tableSchemeToHashCode = scheme.TableSchemeToHashCode();
+                Tuple<string, string> dnf = TableSchemeUtil.GetDnf(scheme);
+                string dnfHashCode = dnf.Item2;
+
+                Assert.AreEqual(tableSchemeToHashCode, dnfHashCode);
+            }
+        }
+
+        [TestMethod]
+        public void TestCNF()
+        {
+            foreach (var testVector in ValidTestVectors)
+            {
+                List<Token> proposition = testVector.ParseLogicalProposition();
+                TableScheme scheme = TableSchemeUtil.ConstructTableScheme(proposition);
+                string tableSchemeToHashCode = scheme.TableSchemeToHashCode();
+
+                Tuple<string, string> cnf = TableSchemeUtil.GetCnf(scheme);
+                string cnfHashcode = cnf.Item2;
+
+                Assert.AreEqual(tableSchemeToHashCode, cnfHashcode);
+            }
+        }
+
+        [TestMethod]
+        public void TestNandify()
+        {
+            foreach (var testVector in ValidTestVectors)
+            {
+                if (testVector.Length > 30) continue; // Trying to avoid SystemOutOfMemory exception
+
+                List<Token> tokens = testVector.ParseLogicalProposition();
+                TableScheme tableScheme = TableSchemeUtil.ConstructTableScheme(tokens);
+                string hashCode = tableScheme.TableSchemeToHashCode();
+
+                Node tree = TreeConstructor.ConstructTree(tokens);
+                string nandifiedTree = tree.Nandify();
+                List<Token> nandTokens = nandifiedTree.ParseLogicalProposition();
+                TableScheme nandTblScheme = TableSchemeUtil.ConstructTableScheme(nandTokens);
+                string nandHashCode = nandTblScheme.TableSchemeToHashCode();
+
+                Assert.AreEqual(hashCode, nandHashCode);
+            }
+
+            for (int i = 0; i < 100; i++)
+            {
+                Node randomTree = TreeConstructor.ConstructRandomTree();
+                string proposition = randomTree.ToPrefixNotation();
+
+                if (proposition.Length > 30) continue; // Trying to avoid SystemOutOfMemory exception
+
+
+                List<Token> tokens = proposition.ParseLogicalProposition();
+                TableScheme tableScheme = TableSchemeUtil.ConstructTableScheme(tokens);
+                string hashCode = tableScheme.TableSchemeToHashCode();
+
+                Node tree = TreeConstructor.ConstructTree(tokens);
+                string nandifiedTree = tree.Nandify();
+                List<Token> nandTokens = nandifiedTree.ParseLogicalProposition();
+                TableScheme nandTblScheme = TableSchemeUtil.ConstructTableScheme(nandTokens);
+                string nandHashCode = nandTblScheme.TableSchemeToHashCode();
+
+                Assert.AreEqual(hashCode, nandHashCode);
+
+            }
+        }
     }
 }
+

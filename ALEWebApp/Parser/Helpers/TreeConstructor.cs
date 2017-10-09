@@ -68,6 +68,7 @@ namespace Common.Helpers
             Node tree = RecurConstRndTree(ref counter, maxLevel);
             return tree;
         }
+
         private static Node RecurConstRndTree(ref int counter, int max)
         {
             if (counter == max)
