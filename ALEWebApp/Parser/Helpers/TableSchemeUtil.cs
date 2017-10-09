@@ -48,7 +48,7 @@ namespace Common.Helpers
 
                 // Transform the rownumber to Binary, ex. rownum - 1, with 3 predicates, results in 001
                 // The transformed rownumber is casted to array of chars
-                char[] rowNumIntoBinary = GeneralHelper.ToBin(rowNum, binaryLength).ToCharArray();
+                char[] rowNumIntoBinary = GeneralHelper.ToBin(row.RowNum, binaryLength).ToCharArray();
 
                 for (var j = 0; j < rowNumIntoBinary.Length; j++)
                 // for each binary number
