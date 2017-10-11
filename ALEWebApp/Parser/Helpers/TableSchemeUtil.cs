@@ -62,7 +62,7 @@ namespace Common.Helpers
                     row.Values.Add(predicateValue ? "1" : "0");
                 }
                 // calculate the result of the row
-                bool resultVal = CalculateRowResultRecur(propositionTree, subsitutionTuples);
+                bool resultVal = propositionTree.CalculateRowResult(subsitutionTuples);
                 row.Result = resultVal;
 
                 // add row to the table
@@ -150,64 +150,7 @@ namespace Common.Helpers
         }
 
 
-        /// <summary>
-        /// Recursively calculates the value of a row in a table
-        /// </summary>
-        /// <param name="tree"> Tree constructed from the logical proposition</param>
-        /// <param name="substitutionTokens"> Tuple list, which replaces predicates in the tree with appropriate true/false values</param>
-        /// <returns></returns>
-        public static bool CalculateRowResultRecur(Node tree, List<Tuple<Token, bool>> substitutionTokens)
-        {
-            bool value = false;
-            if (tree.Token.IsConnective)
-            {
-                // Recusively get boolean values of the children
-                List<bool> booleanResults = new List<bool>();
-                foreach (Node child in tree.Children)
-                {
-                    booleanResults.Add(CalculateRowResultRecur(child, substitutionTokens)); // Recursive call
-                }
-
-                // Calculate value based on the conective node
-                switch (tree.Token.Type)
-                {
-                    case TokenType.And:
-                        value = booleanResults[0] & booleanResults[1];    // P And Q
-                        break;
-                    case TokenType.Or:
-                        value = booleanResults[0] | booleanResults[1];    // P or Q 
-                        break;
-                    case TokenType.Negation:
-                        value = !booleanResults[0];                       // Not P
-                        break;
-                    case TokenType.Implication:
-                        value = !booleanResults[0] | booleanResults[1];   // not P or Q
-                        break;
-                    case TokenType.BiImplication:
-                        value = booleanResults[0] == booleanResults[1];   // P <=> Q
-                        break;
-                    case TokenType.Nand:
-                        value = !(booleanResults[0] & booleanResults[1]); // Not P And Q
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            if (tree.Token.IsTrueOrFalse)
-            {
-                if (tree.Token.Type == TokenType.True) value = true;
-                if (tree.Token.Type == TokenType.False) value = false;
-            }
-            if (tree.Token.IsPredicate)
-            {
-                // Replace a predicate from the tree with a boolean
-                Tuple<Token, bool> replacementTuple = substitutionTokens.FirstOrDefault(x => x.Item1.Char == tree.Token.Char);
-
-                value = replacementTuple?.Item2 ?? throw new ArgumentNullException();
-            }
-            return value;
-        }
-
+       
 
         /// <summary>
         /// Convert a table scheme to a DNF expression

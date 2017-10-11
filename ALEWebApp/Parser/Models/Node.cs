@@ -42,6 +42,65 @@ namespace Common.Models
 
         public int Count => this._children.Count;
 
+        /// <summary>
+        /// Recursively calculates the value of a row in a table
+        /// </summary>
+        /// <param name="tree"> Tree constructed from the logical proposition</param>
+        /// <param name="substitutionTokens"> Tuple list, which replaces predicates in the tree with appropriate true/false values</param>
+        /// <returns></returns>
+        public bool CalculateRowResult(List<Tuple<Token, bool>> substitutionTokens)
+        {
+            bool value = false;
+            if (Token.IsConnective)
+            {
+                // Recusively get boolean values of the children
+                List<bool> booleanResults = new List<bool>();
+                foreach (Node child in Children)
+                {
+                    booleanResults.Add(child.CalculateRowResult(substitutionTokens)); // Recursive call
+                }
+
+                // Calculate value based on the conective node
+                switch (Token.Type)
+                {
+                    case TokenType.And:
+                        value = booleanResults[0] & booleanResults[1];    // P And Q
+                        break;
+                    case TokenType.Or:
+                        value = booleanResults[0] | booleanResults[1];    // P or Q 
+                        break;
+                    case TokenType.Negation:
+                        value = !booleanResults[0];                       // Not P
+                        break;
+                    case TokenType.Implication:
+                        value = !booleanResults[0] | booleanResults[1];   // not P or Q
+                        break;
+                    case TokenType.BiImplication:
+                        value = booleanResults[0] == booleanResults[1];   // P <=> Q
+                        break;
+                    case TokenType.Nand:
+                        value = !(booleanResults[0] & booleanResults[1]); // Not P And Q
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            if (Token.IsTrueOrFalse)
+            {
+                if (Token.Type == TokenType.True) value = true;
+                if (Token.Type == TokenType.False) value = false;
+            }
+            if (Token.IsPredicate)
+            {
+                // Replace a predicate from the tree with a boolean
+                Tuple<Token, bool> replacementTuple = substitutionTokens.FirstOrDefault(x => x.Item1.Char == Token.Char);
+
+                value = replacementTuple?.Item2 ?? throw new ArgumentNullException();
+            }
+            return value;
+        }
+
+
         public string ToInfixNotation()
         {
             switch (Token.Type)
