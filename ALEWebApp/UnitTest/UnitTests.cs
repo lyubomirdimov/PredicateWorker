@@ -203,7 +203,7 @@ namespace UnitTest
         [TestMethod]
         public void TestRandomVectors()
         {
-            for (int i = 0; i < 150; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 Node tree = TreeConstructor.ConstructRandomTree();
                 string prefixTree = tree.ToPrefixNotation();

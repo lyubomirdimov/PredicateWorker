@@ -87,7 +87,6 @@ namespace Common.Helpers
             {
                 completed = true; // Assume completion (if simplification is applied, completed becomes false)
                 List<DataRow> simplifiedDataRows = new List<DataRow>(); // Collection of newly created simplified Rows
-                int rowCount = 0;
                 List<int> alreadySimplifiedRowsIndeces = new List<int>();
 
                 for (int i = 0; i < tblScheme.NrOfDataRows; i++)
@@ -121,7 +120,7 @@ namespace Common.Helpers
                         DataRow newRow = new DataRow
                         {
                             Result = currentRow.Result,
-                            RowNum = rowCount,
+                            RowNum = i,
                             Values = currentRow.Values.ToList()
                         };
                         newRow.Values[indecesForChange[0]] = "*";
