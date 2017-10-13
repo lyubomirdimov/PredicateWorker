@@ -15,6 +15,7 @@ namespace Common.Helpers
         public static Node ConstructTree(List<Token> parsedString)
         {
             Node parentNode = null; // Used as a reference in each iteration
+
             foreach (Token currentSymbol in parsedString)
             {
                 // The loop skips Separators(commas) and opening paranthesis

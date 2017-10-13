@@ -21,10 +21,7 @@ namespace Common.Models
             Token = token;
         }
 
-        public Node GetChild(Guid id)
-        {
-            return this._children.FirstOrDefault(x => x.Id == id);
-        }
+
 
         public void Add(Node item)
         {
@@ -40,7 +37,6 @@ namespace Common.Models
         public List<Node> Children => _children;
 
 
-        public int Count => this._children.Count;
 
         /// <summary>
         /// Recursively calculates the value of a row in a table
@@ -48,7 +44,7 @@ namespace Common.Models
         /// <param name="tree"> Tree constructed from the logical proposition</param>
         /// <param name="substitutionTokens"> Tuple list, which replaces predicates in the tree with appropriate true/false values</param>
         /// <returns></returns>
-        public bool CalculateRowResult(List<Tuple<Token, bool>> substitutionTokens)
+        public bool CalculatePropositionBySubstitution(List<Tuple<Token, bool>> substitutionTokens)
         {
             bool value = false;
             if (Token.IsConnective)
@@ -57,7 +53,7 @@ namespace Common.Models
                 List<bool> booleanResults = new List<bool>();
                 foreach (Node child in Children)
                 {
-                    booleanResults.Add(child.CalculateRowResult(substitutionTokens)); // Recursive call
+                    booleanResults.Add(child.CalculatePropositionBySubstitution(substitutionTokens)); // Recursive call
                 }
 
                 // Calculate value based on the conective node
@@ -184,7 +180,7 @@ namespace Common.Models
                     case TokenType.Implication:
                         A = Children[0];
                         B = Children[1];
-                        result = $"%({A.Nandify()},%({B.Nandify()},{B.Nandify()}))";
+                        result = $"%({A.Nandify()},%({B.Nandify()},{B.Nandify()}))"; 
                         break;
                     case TokenType.BiImplication:
                         A = Children[0];

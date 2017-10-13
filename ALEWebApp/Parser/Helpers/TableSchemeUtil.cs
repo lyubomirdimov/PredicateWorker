@@ -62,7 +62,7 @@ namespace Common.Helpers
                     row.Values.Add(predicateValue ? "1" : "0");
                 }
                 // calculate the result of the row
-                bool resultVal = propositionTree.CalculateRowResult(subsitutionTuples);
+                bool resultVal = propositionTree.CalculatePropositionBySubstitution(subsitutionTuples);
                 row.Result = resultVal;
 
                 // add row to the table

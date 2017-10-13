@@ -9,14 +9,13 @@ namespace Common.Helpers
     {
         public static Regex PropositionalRegex => new Regex(
 
-
             @"^                                         # Start of line
                   (                                     # Either
                       [01A-Za-z](?![01A-Za-z]) |        # A predicate
                       (?<couple>[|&>=%]\((?!,))|        # Start of couple
-                      (?<comma-couple>,(?!\)))|         # Looks for comma followed by couple. Pops off the couple stack.
-                      (?<dBracket-comma>\))|            # Looks for ending bracket following comma. pops off comma stack. 
-                      (?<single>~\((?!\)))|             # Start of single function.
+                      (?<comma-couple>,(?!\))) |        # Looks for comma followed by couple. Pops off the couple stack. (Balancing Group)
+                      (?<dBracket-comma>\))    |        # Looks for ending bracket following comma. pops off comma stack. (Balancing Group)
+                      (?<single>~\((?!\)))     |        # Start of single function.
                       (?<uBracket-single>\)))           # Looks for ending bracket for unary. Pops off the single stack. 
                   +                                     # Any number of times.
                   (?(couple)(?!))                       # Assert couple stack is empty. All have a comma.
