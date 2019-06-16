@@ -1,23 +1,23 @@
 
 
-Assignment 1 
+1 
 	Validate Logical Proposition - Completed
 	Parsing - Completed
 	Tree Structure - Completed 
 	Display Tree Structure - Completed
 	Infix Notation - Completed
 	Infix to prefix - Completed
-Assignment 2 
+2 
 	Define Table Scheme - Completed
 	Hash code - Completed
-Assignment 3
+3
 	Simplification of Table Scheme - Completed
 	Display Simplified Table - Completed 
-Assignment 4
+4
 	Table Scheme to DNF - Completed 
 	Calculate Hash Code - Completed
 	
-Assignment 5
+5
 	Nandify Proposition - Completed
 
 EXTRAS
